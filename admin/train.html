@@ -1,0 +1,78 @@
+
+<div id="eol-hypetrain" class="panel panel-default panel-span-2">
+  <div class="panel-heading">
+    <h3 class="panel-title">Train</h3><i class="fa fa-bus panel-icon"></i>
+  </div>
+  <div class="panel-body">
+    <div style="display: flex; text-align: center;">
+      <div class="column">
+        <div style="margin-top: 0px;" class="ncg-label">Passengers</div>
+        <div style="font-weight: bold; font-size: 200%;" class="js-passengers"></div>
+      </div>
+      <div class="column">
+        <div style="margin-top: 0px;" class="ncg-label">Threshold</div>
+        <div style="font-weight: bold; font-size: 200%;" class="js-threshold"></div>
+      </div>
+    </div>
+    <div style="display: flex; text-align: center;">
+      <div class="column">
+        <div class="ncg-label">Cooldown</div>
+        <div style="margin-top: 0px; font-weight: bold; font-size: 300%;" class="js-cooldown">INACTIVE</div>
+      </div>
+    </div>
+    <div style="margin-top: 4px;" class="btn-group btn-group-justified">
+      <div class="btn-group">
+        <button data-toggle="modal" data-target="#eol-hypetrain_modal" class="btn btn-primary btn-xs">Settings</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="eol-hypetrain_modal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" class="close"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Sub Train Settings</h4>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex">
+          <div class="column js-cooldownCtrls">
+            <h2 style="text-align: center; margin-top: 0px;">Cooldown</h2>
+            <div class="ncg-label">Duration</div>
+            <div class="input-group js-duration"><span class="input-group-addon">Seconds</span>
+              <input type="number" class="form-control"/>
+            </div>
+            <div class="ncg-label">Manual Controls</div>
+            <div style="margin-top: 4px;" class="ncg-btn-group">
+              <div class="btn-group btn-group-justified">
+                <div class="btn-group">
+                  <button type="button" class="js-reset btn btn-xs btn-primary">Reset</button>
+                </div>
+                <div class="btn-group">
+                  <button type="button" class="js-end btn btn-xs btn-danger">End</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="column js-trainCtrls">
+            <h2 style="text-align: center; margin-top: 0px;">Train</h2>
+            <div class="input-group js-passengers"><span class="input-group-addon">Passengers</span>
+              <input type="number" class="form-control"/>
+            </div>
+            <div style="margin-top:4px;" class="input-group js-threshold"><span class="input-group-addon">Threshold</span>
+              <input type="number" class="form-control js-current"/>
+            </div>
+          </div>
+        </div>
+        <div role="alert" style="margin-top: 8px;" class="alert alert-danger"><b>WARNING!</b>&nbsp&nbspChanges might not take effect until the next subscriber.</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-warning btn-xs js-apply">Apply</button>
+        <button type="button" data-dismiss="modal" class="btn btn-default btn-xs">Close</button>
+      </div>
+    </div>
+    <!-- /.modal-content-->
+  </div>
+  <!-- /.modal-dialog-->
+</div>
+<!-- /.modal-->

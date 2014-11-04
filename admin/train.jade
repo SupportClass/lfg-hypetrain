@@ -1,0 +1,63 @@
+#eol-hypetrain.panel.panel-default.panel-span-2
+    .panel-heading
+        h3.panel-title Train
+        i.fa.fa-bus.panel-icon
+    .panel-body
+        div(style="display: flex; text-align: center;")
+            .column
+                .ncg-label(style="margin-top: 0px;") Passengers
+                .js-passengers(style="font-weight: bold; font-size: 200%;")
+            .column
+                .ncg-label(style="margin-top: 0px;") Threshold
+                .js-threshold(style="font-weight: bold; font-size: 200%;")
+        div(style="display: flex; text-align: center;")
+            .column
+                .ncg-label Cooldown
+                .js-cooldown(style="margin-top: 0px; font-weight: bold; font-size: 300%;") INACTIVE
+        .btn-group.btn-group-justified(style="margin-top: 4px;")
+            .btn-group
+                button.btn.btn-primary.btn-xs(data-toggle="modal" data-target="#eol-hypetrain_modal") Settings
+
+#eol-hypetrain_modal.modal.fade
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type="button", data-dismiss="modal")
+                    span(aria-hidden="true") &#215;
+                    span.sr-only Close
+                h4.modal-title Sub Train Settings
+            .modal-body
+                div(style="display: flex")
+                    .column.js-cooldownCtrls
+                        h2(style="text-align: center; margin-top: 0px;") Cooldown
+
+                        .ncg-label Duration
+                        .input-group.js-duration
+                            span.input-group-addon Seconds
+                            input.form-control(type="number")
+
+                        .ncg-label Manual Controls
+                        .ncg-btn-group(style="margin-top: 4px;")
+                            .btn-group.btn-group-justified
+                                .btn-group
+                                    button.js-reset.btn.btn-xs.btn-primary(type='button') Reset
+                                .btn-group
+                                    button.js-end.btn.btn-xs.btn-danger(type='button') End
+                    .column.js-trainCtrls
+                        h2(style="text-align: center; margin-top: 0px;") Train
+                        .input-group.js-passengers
+                            span.input-group-addon Passengers
+                            input.form-control(type="number")
+                        .input-group.js-threshold(style="margin-top:4px;")
+                            span.input-group-addon Threshold
+                            input.form-control.js-current(type="number")
+
+                .alert.alert-danger(role="alert", style="margin-top: 8px;")
+                    b WARNING!
+                    | &nbsp&nbspChanges might not take effect until the next subscriber.
+            .modal-footer
+                button.btn.btn-warning.btn-xs.js-apply(type="button", data-dismiss="modal") Apply
+                button.btn.btn-default.btn-xs(type="button", data-dismiss="modal") Close
+        // /.modal-content
+    // /.modal-dialog
+// /.modal

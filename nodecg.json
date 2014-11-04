@@ -1,0 +1,15 @@
+{
+    "name": "eol-hypetrain",
+    "version": "0.0.1",
+    "nodecgDependency": "^0.1.0",
+    "homepage": "http://alexvan.camp/",
+    "authors": [
+        "Alex Van Camp <email@alexvan.camp>"
+    ],
+    "description": "Provides a hype train for donations/subscriptions. Has no view page.",
+    "license": "Commercial",
+    "extension": {
+        "express": false,
+        "path": "index.js"
+    }
+}

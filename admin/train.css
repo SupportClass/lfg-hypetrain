@@ -1,0 +1,34 @@
+#eol-hypetrain .column {
+  width: 100%;
+  margin: 0 4px;
+}
+#eol-hypetrain .column:first-of-type {
+  margin-right: 4px;
+  margin-left: 0;
+}
+#eol-hypetrain .column:last-of-type {
+  margin-right: 0;
+  margin-left: 4px;
+}
+/* SUB TRAIN */
+#eol-hypetrain_modal input {
+  text-align: right;
+}
+/* FLAGGED NOTES */
+#gw-notestack_flagged {
+  max-height: 308px;
+  overflow-y: scroll;
+}
+#gw-notestack_flagged > .flagged {
+  width: 100%;
+}
+#gw-notestack_flagged .btn {
+  padding: 8px 4px;
+  width: 22px;
+}
+#gw-notestack_flagged .info:hover {
+  cursor: help;
+}
+#gw-notestack_flagged .popover {
+  max-width: 500px;
+}
