@@ -68,6 +68,7 @@ function Train(options) {
 Train.prototype.initializeOptions = function(options) {
     // Intialize options to default values
     this.options.autoStartCooldown = false; // If 'true', automatically starts the cooldown when a passenger is added
+    this.options.resetAfterThreshold = false; // If 'true', hitting the threshold causes the train to reset to zero
 
     // Overwrite defaults with any options supplied to the constructor
     extend (true, this.options, options);
@@ -235,10 +236,15 @@ Train.prototype.addPassenger = function() {
 };
 
 Train.prototype.broadcast = function () {
+    var self = this;
     var deferred = Q.defer();
     this.get()
         .then(function (train) {
             train.isHype = train.passengers >= train.threshold;
+            if (train.isHype && self.options.resetAfterThreshold) {
+                self.set({ passengers: 0 });
+            }
+
             io.sockets.json.send({
                 bundleName: 'eol-hypetrain',
                 messageName: 'trainBroadcast',
