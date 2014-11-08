@@ -160,7 +160,7 @@ Train.prototype.tickCooldown = function() {
 
     if (this.remainingTime <= 0) {
         this.remainingTime = 0; // force to zero if we somehow went negative
-        this.endCooldown().bind(this);
+        this.endCooldown();
     }
 
     io.sockets.json.send({
