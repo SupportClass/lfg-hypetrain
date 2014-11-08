@@ -15,12 +15,12 @@ $(document).ready(function () {
 
     nodecg.listenFor('cooldownTick', cooldownTick);
 
-    cooldownCtrls.find('.js-reset').click(function() { nodecg.sendMessage('resetCooldown', '') });
-    cooldownCtrls.find('.js-end').click(function() { nodecg.sendMessage('endCooldown', '') });
+    cooldownCtrls.find('.js-reset').click(function() { nodecg.sendMessage('resetCooldown') });
+    cooldownCtrls.find('.js-end').click(function() { nodecg.sendMessage('endCooldown') });
 
     function cooldownTick(data) {
         if (data.remainingTime <= 0) {
-            dispCooldown.text('INACTIVE');
+            dispCooldown.text('OFF');
             dispPassengers.text(0);
             setPassengers.find('input').val(0);
         } else {
@@ -33,9 +33,9 @@ $(document).ready(function () {
         }
     }
 
-    function updateCooldownHTML(remainingTime, duration) {
-        cooldownTick({ remainingTime: remainingTime });
-        setDuration.find('input').val(duration);
+    function updateCooldownHTML(train) {
+        cooldownTick({ remainingTime: train.remainingTime });
+        setDuration.find('input').val(train.duration);
     }
 
     /** TRAIN **/
@@ -43,15 +43,19 @@ $(document).ready(function () {
     var trainCtrls = modal.find('.js-trainCtrls');
     var setThreshold = trainCtrls.find('.js-threshold');
     var setPassengers = trainCtrls.find('.js-passengers');
+    var setDayTotal = trainCtrls.find('.js-daytotal');
 
     var dispThreshold = panel.find('.js-threshold');
     var dispPassengers = panel.find('.js-passengers');
+    var dispDayTotal = panel.find('.js-daytotal');
 
-    function updateTrainHTML(passengers, threshold) {
-        dispPassengers.text(passengers);
-        dispThreshold.text(threshold);
-        setPassengers.find('input').val(passengers);
-        setThreshold.find('input').val(threshold);
+    function updateTrainHTML(train) {
+        dispPassengers.text(train.passengers);
+        dispThreshold.text(train.threshold);
+        dispDayTotal.text(train.dayTotal);
+        setPassengers.find('input').val(train.passengers);
+        setThreshold.find('input').val(train.threshold);
+        setDayTotal.find('input').val(train.dayTotal);
     }
 
     /** GENERAL **/
@@ -59,8 +63,8 @@ $(document).ready(function () {
     nodecg.listenFor('trainBroadcast', trainBroadcast);
 
     function trainBroadcast(train) {
-        updateTrainHTML(train.passengers, train.threshold);
-        updateCooldownHTML(train.remainingTime, train.duration);
+        updateTrainHTML(train);
+        updateCooldownHTML(train);
         if (train.isHype) {
             //console.log('[eol-hypetrain] sub hype');
         }
@@ -69,6 +73,7 @@ $(document).ready(function () {
     function applyClick() {
         var train = {
             passengers: parseInt(setPassengers.find('input').val()),
+            dayTotal: parseInt(setDayTotal.find('input').val()),
             threshold: parseInt(setThreshold.find('input').val()),
             duration: parseInt(setDuration.find('input').val())
         };
@@ -76,10 +81,10 @@ $(document).ready(function () {
         nodecg.sendMessage('setTrain', train);
     }
 
-    nodecg.sendMessage('getTrain', {}, function (train) {
-        updateTrainHTML(train.passengers, train.threshold);
-        updateCooldownHTML(train.remainingTime, train.duration);
-        console.log('[eol-hypetrain] got initial train, ' + train.passengers + ' passengers, hype threshold: ' + train.threshold);
+    nodecg.sendMessage('getTrain', function (train) {
+        updateTrainHTML(train);
+        updateCooldownHTML(train);
+        console.log('[eol-hypetrain] got initial train,', train);
     });
 
 });

@@ -13,7 +13,10 @@
         div(style="display: flex; text-align: center;")
             .column
                 .ncg-label Cooldown
-                .js-cooldown(style="margin-top: 0px; font-weight: bold; font-size: 300%;") INACTIVE
+                .js-cooldown(style="margin-top: 0px; font-weight: bold; font-size: 200%;") OFF
+            .column
+                .ncg-label Day Total
+                .js-daytotal(style="margin-top: 0px; font-weight: bold; font-size: 200%;")
         .btn-group.btn-group-justified(style="margin-top: 4px;")
             .btn-group
                 button.btn.btn-primary.btn-xs(data-toggle="modal" data-target="#eol-hypetrain_modal") Settings
@@ -51,6 +54,9 @@
                         .input-group.js-threshold(style="margin-top:4px;")
                             span.input-group-addon Threshold
                             input.form-control.js-current(type="number")
+                        .input-group.js-daytotal(style="margin-top:4px;")
+                            span.input-group-addon Day Total
+                            input.form-control(type="number")
 
                 .alert.alert-danger(role="alert", style="margin-top: 8px;")
                     b WARNING!

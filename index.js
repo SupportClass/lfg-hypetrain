@@ -12,7 +12,7 @@ function Train(options) {
     this.remainingTime = 0;
     this._timer = null;
 
-    // Set up options
+        // Set up options
     this.options = {};
     this.initializeOptions(options);
 
@@ -84,6 +84,7 @@ Train.prototype.init = function() {
             var defaultTrain = {
                 _id: 'train',
                 passengers: 0,
+                dayTotal: 0,
                 threshold: 10,
                 duration: 300
             };
@@ -148,7 +149,8 @@ Train.prototype.startCooldown = function () {
                 messageName: 'cooldownStart',
                 content: {
                     elapsedTime: self.elapsedTime,
-                    remainingTime: self.remainingTime
+                    remainingTime: self.remainingTime,
+                    duration: self.duration
                 }
             });
         });
@@ -216,7 +218,7 @@ Train.prototype._killTimer = function () {
 Train.prototype.addPassenger = function() {
     var self = this;
     var deferred = Q.defer();
-    db.update({ _id: 'train' }, { $inc: { passengers: 1 } }, { upsert: true }, function (err, numAdded) {
+    db.update({ _id: 'train' }, { $inc: { passengers: 1, dayTotal: 1 } }, { upsert: true }, function (err) {
         if (err) {
             deferred.reject(new Error(err));
         } else {
