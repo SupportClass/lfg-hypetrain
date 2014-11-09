@@ -5,6 +5,7 @@ var db = require('./backend/db.js');
 var Q = require('q');
 var io = require('../../server.js');
 var extend = require('extend');
+var fs = require('fs');
 
 function Train() {
     var self = this;
