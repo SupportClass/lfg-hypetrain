@@ -13,8 +13,8 @@ It does not automatically listen for donations and subscriptions, but rather rel
 ```
 #!json
 {
-    "autoStartCooldown": false;
-    "resetAfterThreshold": false;
+    "autoStartCooldown": false,
+    "resetAfterThreshold": false
 }
 ```
 
