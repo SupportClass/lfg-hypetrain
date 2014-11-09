@@ -7,7 +7,7 @@ It does not automatically listen for donations and subscriptions, but rather rel
 ## Installation
 
 - Install to `nodecg/bundles/eol-hypetrain`
-- (OPTIONAL) Create `config.json` in `nodecg/bundles/eol-sublistener`
+- (OPTIONAL) Create `config.json` in `nodecg/bundles/eol-hypetrain`
 
 ### Config Example
 ```
