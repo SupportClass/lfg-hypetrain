@@ -263,4 +263,4 @@ Train.prototype.broadcast = function () {
     return deferred.promise;
 };
 
-module.exports = exports = new Train();
+module.exports = new Train();
