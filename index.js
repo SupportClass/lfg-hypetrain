@@ -1,3 +1,5 @@
+'use strict';
+
 // Exports a train singleton
 var db = require('./backend/db.js');
 var Q = require('q');
