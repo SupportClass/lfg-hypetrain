@@ -42,7 +42,6 @@ function Train() {
                         });
                 }
 
-                // When the view page loads, it will request the history
                 if (data.messageName === 'setTrain') {
                     self.set(data.content)
                         .then(fn)
