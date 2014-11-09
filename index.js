@@ -6,7 +6,7 @@ var Q = require('q');
 var io = require('../../server.js');
 var extend = require('extend');
 
-function Train(options) {
+function Train() {
     var self = this;
 
     // These properties are transient and are not persisted in the DB
@@ -16,7 +16,7 @@ function Train(options) {
 
         // Set up options
     this.options = {};
-    this.initializeOptions(options);
+    this.initializeOptions();
 
     this.init()
         .then(listen)
@@ -68,12 +68,18 @@ function Train(options) {
 }
 
 Train.prototype.initializeOptions = function(options) {
+    var cfgPath = __dirname + '/config.json';
+    var config = {};
+    if (fs.existsSync(cfgPath)) {
+        config = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+    }
+
     // Intialize options to default values
     this.options.autoStartCooldown = false; // If 'true', automatically starts the cooldown when a passenger is added
     this.options.resetAfterThreshold = false; // If 'true', hitting the threshold causes the train to reset to zero
 
-    // Overwrite defaults with any options supplied to the constructor
-    extend (true, this.options, options);
+    // Overwrite defaults with any options from the config
+    extend (true, this.options, config);
 };
 
 Train.prototype.init = function() {
