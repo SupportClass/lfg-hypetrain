@@ -6,6 +6,7 @@ var Q = require('q');
 var io = require('../../server.js');
 var extend = require('extend');
 var fs = require('fs');
+var log = require('../../lib/logger');
 
 function Train() {
     var self = this;
@@ -37,7 +38,7 @@ function Train() {
                     self.get()
                         .then(fn)
                         .fail(function (err) {
-                            console.err('[eol-hypetrain] failed to get train: ' + err);
+                            log.error('[eol-hypetrain] failed to get train: ' + err);
                             fn(null);
                         });
                 }
@@ -46,7 +47,7 @@ function Train() {
                     self.set(data.content)
                         .then(fn)
                         .fail(function (err) {
-                            console.err('[eol-hypetrain] failed to set train: ' + err);
+                            log.error('[eol-hypetrain] failed to set train: ' + err);
                             fn(null);
                         });
                 }
@@ -77,6 +78,7 @@ Train.prototype.initializeOptions = function(options) {
     // Intialize options to default values
     this.options.autoStartCooldown = false; // If 'true', automatically starts the cooldown when a passenger is added
     this.options.resetAfterThreshold = false; // If 'true', hitting the threshold causes the train to reset to zero
+    this.options.disableThresholdEditing = false; // If 'true', prevents threshold from being modified during runtime
 
     // Overwrite defaults with any options from the config
     extend (true, this.options, config);
@@ -129,6 +131,11 @@ Train.prototype.get = function() {
 
 // Allows for setting any or all of the properties.
 Train.prototype.set = function(args) {
+    if (args.threshold && this.options.disableThresholdEditing) {
+        delete args.threshold;
+        log.warn('[eol-hypetrain] Blocked attempt to edit threshold while disableThresholdEditing was set to "true"');
+    }
+
     var self = this;
     var deferred = Q.defer();
     db.update({ _id: 'train' }, { $set: args }, { upsert: true }, function (err, numAdded) {
@@ -263,7 +270,7 @@ Train.prototype.broadcast = function () {
             deferred.resolve(train);
         })
         .fail(function() {
-            console.err('[eol-hypetrain] failed to broadcast train update:', err);
+            log.error('[eol-hypetrain] failed to broadcast train update:', err);
             deferred.reject(new Error(err));
         });
     return deferred.promise;
