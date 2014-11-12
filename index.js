@@ -68,7 +68,7 @@ function Train() {
     }
 }
 
-Train.prototype.initializeOptions = function(options) {
+Train.prototype.initializeOptions = function() {
     var cfgPath = __dirname + '/config.json';
     var config = {};
     if (fs.existsSync(cfgPath)) {
