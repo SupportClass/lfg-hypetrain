@@ -16,9 +16,13 @@ function Train() {
     this.remainingTime = 0;
     this._timer = null;
 
-        // Set up options
-    this.options = {};
-    this.initializeOptions();
+    // Set up config
+    var config = {};
+    Object.defineProperty( this, 'config', {
+        value: require('./backend/config'),
+        writable: false,
+        enumerable: true
+    });
 
     this.init()
         .then(listen)
@@ -68,22 +72,6 @@ function Train() {
     }
 }
 
-Train.prototype.initializeOptions = function() {
-    var cfgPath = __dirname + '/config.json';
-    var config = {};
-    if (fs.existsSync(cfgPath)) {
-        config = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
-    }
-
-    // Intialize options to default values
-    this.options.autoStartCooldown = false; // If 'true', automatically starts the cooldown when a passenger is added
-    this.options.resetAfterThreshold = false; // If 'true', hitting the threshold causes the train to reset to zero
-    this.options.disableThresholdEditing = false; // If 'true', prevents threshold from being modified during runtime
-
-    // Overwrite defaults with any options from the config
-    extend (true, this.options, config);
-};
-
 Train.prototype.init = function() {
     var deferred = Q.defer();
     db.findOne({ _id: 'train' }, function (err, doc) {
@@ -123,6 +111,7 @@ Train.prototype.get = function() {
         } else {
             train.elapsedTime = self.elapsedTime;
             train.remainingTime = self.remainingTime;
+            train.config = self.config;
             deferred.resolve(train);
         }
     });
@@ -131,7 +120,7 @@ Train.prototype.get = function() {
 
 // Allows for setting any or all of the properties.
 Train.prototype.set = function(args) {
-    if (args.threshold && this.options.disableThresholdEditing) {
+    if (args.threshold && this.config.disableThresholdEditing) {
         delete args.threshold;
         log.warn('[eol-hypetrain] Blocked attempt to edit threshold while disableThresholdEditing was set to "true"');
     }
@@ -240,7 +229,7 @@ Train.prototype.addPassenger = function() {
             // This is somewhat convoluted, but the idea is to start the cooldown (will automatically restart if necessary)
             // and then broadcast out all the new data, but then leverage the ".get" that .broadcast did and return that
             // so that we don't have to do another ".get"
-            if (self.options.autoStartCooldown)
+            if (self.config.autoStartCooldown)
                 self.startCooldown();
 
             self.broadcast()
@@ -258,7 +247,7 @@ Train.prototype.broadcast = function () {
     this.get()
         .then(function (train) {
             train.isHype = train.passengers >= train.threshold;
-            if (train.isHype && self.options.resetAfterThreshold) {
+            if (train.isHype && self.config.resetAfterThreshold) {
                 self.set({ passengers: 0 });
             }
 
