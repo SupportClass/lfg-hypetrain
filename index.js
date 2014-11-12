@@ -3,11 +3,17 @@
 // Exports a train singleton
 var db = require('./backend/db.js');
 var Q = require('q');
-var io = require('../../server.js');
 var extend = require('extend');
 var fs = require('fs');
+var nodecg = {};
 
-function Train() {
+function Train(extensionApi) {
+    if ( Train.prototype._singletonInstance ) {
+        return Train.prototype._singletonInstance;
+    }
+    Train.prototype._singletonInstance = this;
+
+    nodecg = extensionApi;
     var self = this;
 
     // These properties are transient and are not persisted in the DB
@@ -15,56 +21,37 @@ function Train() {
     this.remainingTime = 0;
     this._timer = null;
 
-        // Set up options
+    // Set up options
     this.options = {};
     this.initializeOptions();
 
     this.init()
-        .then(listen)
         .fail(function(err) {
             throw err;
         });
 
-    function listen() {
-        io.sockets.on('connection', function onConnection(socket) {
-            socket.on('message', function onMessage(data, fn) {
-                if (data.bundleName !== 'eol-hypetrain') {
-                    return;
-                }
-
-                // When the view page loads, it will request the history
-                if (data.messageName === 'getTrain') {
-                    self.get()
-                        .then(fn)
-                        .fail(function (err) {
-                            console.err('[eol-hypetrain] failed to get train: ' + err);
-                            fn(null);
-                        });
-                }
-
-                if (data.messageName === 'setTrain') {
-                    self.set(data.content)
-                        .then(fn)
-                        .fail(function (err) {
-                            console.err('[eol-hypetrain] failed to set train: ' + err);
-                            fn(null);
-                        });
-                }
-
-                if (data.messageName === 'startCooldown') {
-                    self.startCooldown();
-                }
-
-                if (data.messageName === 'endCooldown') {
-                    self.endCooldown();
-                }
-
-                if (data.messageName === 'resetCooldown') {
-                    self.resetCooldown();
-                }
+    // When the view page loads, it will request the history
+    nodecg.listenFor('getTrain', function getTrain(data, cb) {
+        self.get()
+            .then(cb)
+            .fail(function (err) {
+                console.err('[eol-hypetrain] failed to get train: ' + err);
+                cb(null);
             });
-        });
-    }
+    });
+
+    nodecg.listenFor('setTrain', function setTrain(data, cb) {
+        self.set(data.content)
+            .then(fn)
+            .fail(function (err) {
+                console.err('[eol-hypetrain] failed to set train: ' + err);
+                fn(null);
+            });
+    });
+
+    nodecg.listenFor('startCooldown', this.startCooldown);
+    nodecg.listenFor('endCooldown', this.endCooldown);
+    nodecg.listenFor('resetCooldown', this.resetCooldown);
 }
 
 Train.prototype.initializeOptions = function(options) {
@@ -152,14 +139,10 @@ Train.prototype.startCooldown = function () {
             self.remainingTime = train.duration;
             self._timer = setInterval(self.tickCooldown.bind(self), 1000);
 
-            io.sockets.json.send({
-                bundleName: 'eol-hypetrain',
-                messageName: 'cooldownStart',
-                content: {
-                    elapsedTime: self.elapsedTime,
-                    remainingTime: self.remainingTime,
-                    duration: self.duration
-                }
+            nodecg.sendMessage('cooldownStart', {
+                elapsedTime: self.elapsedTime,
+                remainingTime: self.remainingTime,
+                duration: self.duration
             });
         });
 };
@@ -173,13 +156,9 @@ Train.prototype.tickCooldown = function() {
         this.endCooldown();
     }
 
-    io.sockets.json.send({
-        bundleName: 'eol-hypetrain',
-        messageName: 'cooldownTick',
-        content: {
-            elapsedTime: this.elapsedTime,
-            remainingTime: this.remainingTime
-        }
+    nodecg.sendMessage('cooldownTick', {
+        elapsedTime: this.elapsedTime,
+        remainingTime: this.remainingTime
     });
 };
 
@@ -197,19 +176,12 @@ Train.prototype.endCooldown = function() {
     this._killTimer();
 
     // Another hack to make sure all listeners register zero seconds remaining
-    io.sockets.json.send({
-        bundleName: 'eol-hypetrain',
-        messageName: 'cooldownTick',
-        content: {
-            elapsedTime: 0,
-            remainingTime: 0
-        }
+    nodecg.sendMessage('cooldownTick', {
+        elapsedTime: 0,
+        remainingTime: 0
     });
 
-    io.sockets.json.send({
-        bundleName: 'eol-hypetrain',
-        messageName: 'cooldownEnd'
-    });
+    nodecg.sendMessage('cooldownEnd');
 
     this.set({ passengers: 0 });
 };
@@ -255,11 +227,7 @@ Train.prototype.broadcast = function () {
                 self.set({ passengers: 0 });
             }
 
-            io.sockets.json.send({
-                bundleName: 'eol-hypetrain',
-                messageName: 'trainBroadcast',
-                content: train
-            });
+            nodecg.sendMessage('trainBroadcast', train);
             deferred.resolve(train);
         })
         .fail(function() {
@@ -269,4 +237,4 @@ Train.prototype.broadcast = function () {
     return deferred.promise;
 };
 
-module.exports = new Train();
+module.exports = function(extensionApi) { new Train(extensionApi) };
