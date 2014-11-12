@@ -96,17 +96,17 @@ $(document).ready(function () {
         train.remainingTime = data.remainingTime;
     });
 
-    nodecg.listenFor('trainBroadcast', function trainBroadcast(data) {
-        train = data;
-    });
+    nodecg.listenFor('trainBroadcast', gotTrain);
+    nodecg.sendMessage('getTrain', gotTrain);
 
-    nodecg.sendMessage('getTrain', function (data) {
+    function gotTrain(data) {
         for (var key in data) {
             if (train.hasOwnProperty(key)) {
                 train[key] = data[key];
             }
         }
-        console.log('[eol-hypetrain] got initial train,', train);
-    });
+
+        trainCtrls.find('.js-threshold').prop('disabled', data.config.disableThresholdEditing);
+    }
 
 });

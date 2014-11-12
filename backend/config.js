@@ -2,6 +2,7 @@
 
 var fs = require('fs');
 var extend = require('extend');
+var path = require('path');
 
 var config = {
     autoStartCooldown: false,       // If 'true', automatically starts the cooldown when a passenger is added
@@ -10,8 +11,11 @@ var config = {
 };
 
 // Load user config if it exists, and merge it
-if (fs.existsSync('../config.json')) {
-    var userConfig = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+var cfgPath = path.join(__dirname, '../config.json');
+console.log(cfgPath);
+if (fs.existsSync(cfgPath)) {
+    var userConfig = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+    console.log(userConfig);
     extend (true, config, userConfig);
 }
 
