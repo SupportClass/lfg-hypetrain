@@ -3,87 +3,109 @@ $(document).ready(function () {
     var modal = $('#eol-hypetrain_modal');
     var panel = $('#eol-hypetrain');
 
-    modal.find('.js-apply').click(applyClick);
-
-    /** COOLDOWN **/
-
-    var cooldownCtrls = modal.find('.js-cooldownCtrls');
-    var setDuration = cooldownCtrls.find('.js-duration');
-    var resetCooldown = cooldownCtrls.find('.js-reset');
-    var endCooldown = cooldownCtrls.find('.js-end');
-    var dispCooldown = panel.find('.js-cooldown');
-
-    nodecg.listenFor('cooldownTick', cooldownTick);
-
-    cooldownCtrls.find('.js-reset').click(function() { nodecg.sendMessage('resetCooldown') });
-    cooldownCtrls.find('.js-end').click(function() { nodecg.sendMessage('endCooldown') });
-
-    function cooldownTick(data) {
-        if (data.remainingTime <= 0) {
-            dispCooldown.text('OFF');
-            dispPassengers.text(0);
-            setPassengers.find('input').val(0);
-        } else {
-            var minutes = Math.floor(data.remainingTime / 60);
-            var seconds = data.remainingTime - minutes * 60;
-            if (seconds < 10)
-                seconds = '0' + seconds;
-
-            dispCooldown.text(minutes + ':' + seconds);
-        }
-    }
-
-    function updateCooldownHTML(train) {
-        cooldownTick({ remainingTime: train.remainingTime });
-        setDuration.find('input').val(train.duration);
-    }
-
-    /** TRAIN **/
+    modal.find('.js-apply').click(function applyClick() {
+        nodecg.sendMessage('setTrain', train);
+    });
 
     var trainCtrls = modal.find('.js-trainCtrls');
-    var setThreshold = trainCtrls.find('.js-threshold');
-    var setPassengers = trainCtrls.find('.js-passengers');
-    var setDayTotal = trainCtrls.find('.js-daytotal');
+    var cooldownCtrls = modal.find('.js-cooldownCtrls');
+    cooldownCtrls.find('.js-reset').click(function resetClick() {
+        nodecg.sendMessage('resetCooldown')
+    });
+    cooldownCtrls.find('.js-end').click(function endClick() {
+        nodecg.sendMessage('endCooldown')
+    });
 
-    var dispThreshold = panel.find('.js-threshold');
-    var dispPassengers = panel.find('.js-passengers');
-    var dispDayTotal = panel.find('.js-daytotal');
+    var train = {};
 
-    function updateTrainHTML(train) {
-        dispPassengers.text(train.passengers);
-        dispThreshold.text(train.threshold);
-        dispDayTotal.text(train.dayTotal);
-        setPassengers.find('input').val(train.passengers);
-        setThreshold.find('input').val(train.threshold);
-        setDayTotal.find('input').val(train.dayTotal);
-    }
+    var durationVal = 0;
+    Object.defineProperty(train, 'duration', {
+        get: function() {
+            return durationVal;
+        },
+        set: function(newValue) {
+            durationVal = newValue;
+            cooldownCtrls.find('.js-duration').val(newValue);
+        },
+        enumerable: true
+    });
 
-    /** GENERAL **/
+    var remainingTimeVal = 0;
+    Object.defineProperty(train, 'remainingTime', {
+        get: function() {
+            return remainingTimeVal;
+        },
+        set: function(newValue) {
+            remainingTimeVal = newValue;
 
-    nodecg.listenFor('trainBroadcast', trainBroadcast);
+            if (newValue <= 0) {
+                panel.find('.js-cooldown').text('OFF');
+                this.passengers = 0;
+            } else {
+                var minutes = Math.floor(newValue / 60);
+                var seconds = newValue - minutes * 60;
+                if (seconds < 10)
+                    seconds = '0' + seconds;
 
-    function trainBroadcast(train) {
-        updateTrainHTML(train);
-        updateCooldownHTML(train);
-        if (train.isHype) {
-            //console.log('[eol-hypetrain] sub hype');
+                panel.find('.js-cooldown').text(minutes + ':' + seconds);
+            }
+        },
+        enumerable: true
+    });
+
+    var thresholdVal = 0;
+    Object.defineProperty(train, 'threshold', {
+        get: function() {
+            return thresholdVal;
+        },
+        set: function(newValue) {
+            thresholdVal = newValue;
+            trainCtrls.find('.js-threshold').val(newValue);
+            panel.find('.js-threshold').text(newValue);
+        },
+        enumerable: true
+    });
+
+    var passengersVal = 0;
+    Object.defineProperty(train, 'passengers', {
+        get: function() {
+            return passengersVal;
+        },
+        set: function(newValue) {
+            passengersVal = newValue;
+            trainCtrls.find('.js-passengers').val(newValue);
+            panel.find('.js-passengers').text(newValue);
+        },
+        enumerable: true
+    });
+
+    var dayTotalVal = 0;
+    Object.defineProperty(train, 'dayTotal', {
+        get: function() {
+            return dayTotalVal;
+        },
+        set: function(newValue) {
+            dayTotalVal = newValue;
+            trainCtrls.find('.js-daytotal').val(newValue);
+            panel.find('.js-daytotal').text(newValue);
+        },
+        enumerable: true
+    });
+
+    nodecg.listenFor('cooldownTick', function cooldownTick(data) {
+        train.remainingTime = data.remainingTime;
+    });
+
+    nodecg.listenFor('trainBroadcast', function trainBroadcast(data) {
+        train = data;
+    });
+
+    nodecg.sendMessage('getTrain', function (data) {
+        for (var key in data) {
+            if (train.hasOwnProperty(key)) {
+                train[key] = data[key];
+            }
         }
-    }
-
-    function applyClick() {
-        var train = {
-            passengers: parseInt(setPassengers.find('input').val()),
-            dayTotal: parseInt(setDayTotal.find('input').val()),
-            threshold: parseInt(setThreshold.find('input').val()),
-            duration: parseInt(setDuration.find('input').val())
-        };
-
-        nodecg.sendMessage('setTrain', train);
-    }
-
-    nodecg.sendMessage('getTrain', function (train) {
-        updateTrainHTML(train);
-        updateCooldownHTML(train);
         console.log('[eol-hypetrain] got initial train,', train);
     });
 
