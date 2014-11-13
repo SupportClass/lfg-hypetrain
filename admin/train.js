@@ -6,7 +6,10 @@ $(document).ready(function () {
     var cooldownCtrls = modal.find('.js-cooldownCtrls');
 
     modal.find('.js-apply').click(function applyClick() {
-        nodecg.sendMessage('setTrain', train);
+        nodecg.variables.passengers = parseInt(trainCtrls.find('.js-passengers').val());
+        nodecg.variables.dayTotal = parseInt(trainCtrls.find('.js-daytotal').val());
+        nodecg.variables.threshold = parseInt(trainCtrls.find('.js-threshold').val());
+        nodecg.variables.duration = parseInt(trainCtrls.find('.js-duration').val());
     });
 
     nodecg.createVar('remainingTime', 0, function remainingTime(newValue) {

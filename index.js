@@ -108,7 +108,6 @@ Train.prototype.init = function() {
 
 // Allows for setting any or all of the properties.
 Train.prototype.write = function(args) {
-    var self = this;
     db.update({ _id: 'train' }, { $set: args }, { upsert: true }, function (err, numAdded) {
         if (err)
             log.error(err.stack);
@@ -144,8 +143,8 @@ Train.prototype.resetCooldown = function() {
 
 Train.prototype.endCooldown = function() {
     this._killTimer();
+    this.write({ passengers: 0 });
     nodecg.sendMessage('cooldownEnd');
-    this.set({ passengers: 0 });
 };
 
 Train.prototype._killTimer = function () {

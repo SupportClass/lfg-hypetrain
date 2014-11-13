@@ -38,9 +38,9 @@
                         h2(style="text-align: center; margin-top: 0px;") Cooldown
 
                         .ncg-label Duration
-                        .input-group.js-duration
+                        .input-group
                             span.input-group-addon Seconds
-                            input.form-control(type="number")
+                            input.form-control.js-duration(type="number")
 
                         .ncg-label Manual Controls
                         .ncg-btn-group(style="margin-top: 4px;")
@@ -51,15 +51,15 @@
                                     button.js-end.btn.btn-xs.btn-danger(type='button') End
                     .column.js-trainCtrls
                         h2(style="text-align: center; margin-top: 0px;") Train
-                        .input-group.js-passengers
+                        .input-group
                             span.input-group-addon Passengers
-                            input.form-control(type="number")
-                        .input-group.js-threshold(style="margin-top:4px;")
+                            input.form-control.js-passengers(type="number")
+                        .input-group(style="margin-top:4px;")
                             span.input-group-addon Threshold
-                            input.form-control.js-current(type="number")
-                        .input-group.js-daytotal(style="margin-top:4px;")
+                            input.form-control.js-threshold(type="number")
+                        .input-group(style="margin-top:4px;")
                             span.input-group-addon Day Total
-                            input.form-control(type="number")
+                            input.form-control.js-daytotal(type="number")
 
                 .alert.alert-danger(role="alert", style="margin-top: 8px;")
                     b WARNING!
