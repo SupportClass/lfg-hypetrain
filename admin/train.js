@@ -12,9 +12,10 @@ $(document).ready(function () {
         nodecg.variables.duration = parseInt(trainCtrls.find('.js-duration').val());
     });
 
+    var cooldownEl = panel.find('.js-cooldown');
     nodecg.declareSyncedVar('remainingTime', 0, function remainingTime(newValue) {
         if (newValue <= 0) {
-            panel.find('.js-cooldown').text('OFF');
+            cooldownEl.text('OFF');
             this.passengers = 0;
         } else {
             var minutes = Math.floor(newValue / 60);
@@ -22,7 +23,7 @@ $(document).ready(function () {
             if (seconds < 10)
                 seconds = '0' + seconds;
 
-            panel.find('.js-cooldown').text(minutes + ':' + seconds);
+            cooldownEl.text(minutes + ':' + seconds);
         }
     });
 
