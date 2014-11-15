@@ -151,4 +151,4 @@ Train.prototype.addPassenger = function() {
         this.startCooldown();
 };
 
-module.exports = function(extensionApi) { new Train(extensionApi) };
+module.exports = function(extensionApi) { return new Train(extensionApi) };
