@@ -9,7 +9,7 @@ $(document).ready(function () {
         nodecg.variables.passengers = parseInt(trainCtrls.find('.js-passengers').val());
         nodecg.variables.dayTotal = parseInt(trainCtrls.find('.js-daytotal').val());
         nodecg.variables.threshold = parseInt(trainCtrls.find('.js-threshold').val());
-        nodecg.variables.duration = parseInt(trainCtrls.find('.js-duration').val());
+        nodecg.variables.duration = parseInt(cooldownCtrls.find('.js-duration').val());
     });
 
     var cooldownEl = panel.find('.js-cooldown');
