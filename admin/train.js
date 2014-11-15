@@ -12,7 +12,7 @@ $(document).ready(function () {
         nodecg.variables.duration = parseInt(trainCtrls.find('.js-duration').val());
     });
 
-    nodecg.createVar('remainingTime', 0, function remainingTime(newValue) {
+    nodecg.declareSyncedVar('remainingTime', 0, function remainingTime(newValue) {
         if (newValue <= 0) {
             panel.find('.js-cooldown').text('OFF');
             this.passengers = 0;
@@ -26,21 +26,21 @@ $(document).ready(function () {
         }
     });
 
-    nodecg.createVar('duration', 300, function duration(newValue) {
+    nodecg.declareSyncedVar('duration', 300, function duration(newValue) {
         cooldownCtrls.find('.js-duration').val(newValue);
     });
 
-    nodecg.createVar('threshold', 0, function dayTotal(newValue) {
+    nodecg.declareSyncedVar('threshold', 0, function dayTotal(newValue) {
         trainCtrls.find('.js-threshold').val(newValue);
         panel.find('.js-threshold').text(newValue);
     });
 
-    nodecg.createVar('passengers', 0, function duration(newValue) {
+    nodecg.declareSyncedVar('passengers', 0, function duration(newValue) {
         trainCtrls.find('.js-passengers').val(newValue);
         panel.find('.js-passengers').text(newValue);
     });
 
-    nodecg.createVar('dayTotal', 300, function duration(newValue) {
+    nodecg.declareSyncedVar('dayTotal', 0, function duration(newValue) {
         trainCtrls.find('.js-daytotal').val(newValue);
         panel.find('.js-daytotal').text(newValue);
     });
@@ -56,11 +56,5 @@ $(document).ready(function () {
         nodecg.sendMessage('startCooldown');
     });
 
-    nodecg.sendMessage('getTrain', function (train) {
-        nodecg.variables.passengers = train.passengers;
-        nodecg.variables.threshold = train.threshold;
-        nodecg.variables.duration = train.duration;
-        nodecg.variables.dayTotal = train.dayTotal;
-        console.log('[eol-hypetrain] got initial train,', train);
-    });
+    console.log(nodecg._varHandlers);
 });

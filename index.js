@@ -18,8 +18,8 @@ function Train(extensionApi) {
     var self = this;
 
     // These properties are transient and are not persisted in the DB
-    nodecg.createVar('elapsedTime', 0);
-    nodecg.createVar('remainingTime', 0);
+    nodecg.declareSyncedVar('elapsedTime', 0);
+    nodecg.declareSyncedVar('remainingTime', 0);
 
     this._timer = null;
 
@@ -29,32 +29,22 @@ function Train(extensionApi) {
 
     this.init()
         .then(function(train) {
-            nodecg.createVar('passengers', train.passengers, function(newVal) {
+            nodecg.declareSyncedVar('passengers', train.passengers, function(newVal) {
                 self.write({passengers: newVal});
             });
-            nodecg.createVar('dayTotal', train.dayTotal, function(newVal) {
+            nodecg.declareSyncedVar('dayTotal', train.dayTotal, function(newVal) {
                 self.write({dayTotal: newVal});
             });
-            nodecg.createVar('threshold', train.threshold, function(newVal) {
+            nodecg.declareSyncedVar('threshold', train.threshold, function(newVal) {
                 self.write({threshold: newVal});
             });
-            nodecg.createVar('duration', train.duration, function(newVal) {
+            nodecg.declareSyncedVar('duration', train.duration, function(newVal) {
                 self.write({duration: newVal});
             });
         })
         .fail(function(err) {
             throw err;
         });
-
-    // When the view page loads, it will request the history
-    nodecg.listenFor('getTrain', function getTrain(data, cb) {
-        cb({
-            passengers: nodecg.variables.passengers,
-            dayTotal: nodecg.variables.dayTotal,
-            threshold: nodecg.variables.threshold,
-            duration: nodecg.variables.duration
-        })
-    });
 
     nodecg.listenFor('startCooldown', this.startCooldown.bind(this));
     nodecg.listenFor('endCooldown', this.endCooldown.bind(this));
@@ -152,9 +142,6 @@ Train.prototype._killTimer = function () {
         clearInterval(this._timer);
         this._timer = null;
     }
-
-    nodecg.variables.elapsedTime = 0;
-    nodecg.variables.remainingTime = 0;
 };
 
 Train.prototype.addPassenger = function() {
