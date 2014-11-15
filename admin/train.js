@@ -56,6 +56,4 @@ $(document).ready(function () {
     $('#eol-hypetrain_test').click(function(){
         nodecg.sendMessage('startCooldown');
     });
-
-    console.log(nodecg._varHandlers);
 });
