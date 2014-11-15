@@ -18,8 +18,9 @@ function Train(extensionApi) {
     var self = this;
 
     // These properties are transient and are not persisted in the DB
-    nodecg.declareSyncedVar('elapsedTime', 0);
-    nodecg.declareSyncedVar('remainingTime', 0);
+
+    nodecg.declareSyncedVar({ variableName: 'elapsedTime', initialVal: 0 });
+    nodecg.declareSyncedVar({ variableName: 'remainingTime', initialVal: 0 });
 
     this._timer = null;
 
@@ -29,17 +30,29 @@ function Train(extensionApi) {
 
     this.init()
         .then(function(train) {
-            nodecg.declareSyncedVar('passengers', train.passengers, function(newVal) {
-                self.write({passengers: newVal});
+            nodecg.declareSyncedVar({ variableName: 'passengers',
+                initialVal: train.passengers,
+                setter: function(newVal) {
+                    self.write({passengers: newVal});
+                }
             });
-            nodecg.declareSyncedVar('dayTotal', train.dayTotal, function(newVal) {
-                self.write({dayTotal: newVal});
+            nodecg.declareSyncedVar({ variableName: 'dayTotal',
+                initialVal: train.dayTotal,
+                setter: function(newVal) {
+                    self.write({dayTotal: newVal});
+                }
             });
-            nodecg.declareSyncedVar('threshold', train.threshold, function(newVal) {
-                self.write({threshold: newVal});
+            nodecg.declareSyncedVar({ variableName: 'threshold',
+                initialVal: train.threshold,
+                setter: function(newVal) {
+                    self.write({threshold: newVal});
+                }
             });
-            nodecg.declareSyncedVar('duration', train.duration, function(newVal) {
-                self.write({duration: newVal});
+            nodecg.declareSyncedVar({ variableName: 'duration',
+                initialVal: train.duration,
+                setter: function(newVal) {
+                    self.write({duration: newVal});
+                }
             });
         })
         .fail(function(err) {
@@ -149,6 +162,8 @@ Train.prototype.addPassenger = function() {
 
     if (this.options.autoStartCooldown)
         this.startCooldown();
+
+    return nodecg.variables
 };
 
 module.exports = function(extensionApi) { return new Train(extensionApi) };

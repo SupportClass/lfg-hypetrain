@@ -13,37 +13,49 @@ $(document).ready(function () {
     });
 
     var cooldownEl = panel.find('.js-cooldown');
-    nodecg.declareSyncedVar('remainingTime', 0, function remainingTime(newValue) {
-        if (newValue <= 0) {
-            cooldownEl.text('OFF');
-            this.passengers = 0;
-        } else {
-            var minutes = Math.floor(newValue / 60);
-            var seconds = newValue - minutes * 60;
-            if (seconds < 10)
-                seconds = '0' + seconds;
+    nodecg.declareSyncedVar({ variableName: 'remainingTime',
+        initialVal: 0,
+        setter: function(newVal) {
+            if (newVal <= 0) {
+                cooldownEl.text('OFF');
+                this.passengers = 0;
+            } else {
+                var minutes = Math.floor(newVal / 60);
+                var seconds = newVal - minutes * 60;
+                if (seconds < 10)
+                    seconds = '0' + seconds;
 
-            cooldownEl.text(minutes + ':' + seconds);
+                cooldownEl.text(minutes + ':' + seconds);
+            }
         }
     });
 
-    nodecg.declareSyncedVar('duration', 300, function duration(newValue) {
-        cooldownCtrls.find('.js-duration').val(newValue);
+    nodecg.declareSyncedVar({ variableName: 'passengers',
+        initialVal: 0,
+        setter: function(newVal) {
+            trainCtrls.find('.js-passengers').val(newVal);
+            panel.find('.js-passengers').text(newVal);
+        }
     });
-
-    nodecg.declareSyncedVar('threshold', 0, function dayTotal(newValue) {
-        trainCtrls.find('.js-threshold').val(newValue);
-        panel.find('.js-threshold').text(newValue);
+    nodecg.declareSyncedVar({ variableName: 'dayTotal',
+        initialVal: 0,
+        setter: function(newVal) {
+            trainCtrls.find('.js-daytotal').val(newVal);
+            panel.find('.js-daytotal').text(newVal);
+        }
     });
-
-    nodecg.declareSyncedVar('passengers', 0, function duration(newValue) {
-        trainCtrls.find('.js-passengers').val(newValue);
-        panel.find('.js-passengers').text(newValue);
+    nodecg.declareSyncedVar({ variableName: 'threshold',
+        initialVal: 0,
+        setter: function(newVal) {
+            trainCtrls.find('.js-threshold').val(newVal);
+            panel.find('.js-threshold').text(newVal);
+        }
     });
-
-    nodecg.declareSyncedVar('dayTotal', 0, function duration(newValue) {
-        trainCtrls.find('.js-daytotal').val(newValue);
-        panel.find('.js-daytotal').text(newValue);
+    nodecg.declareSyncedVar({ variableName: 'duration',
+        initialVal: 300,
+        setter: function(newVal) {
+            cooldownCtrls.find('.js-duration').val(newVal);
+        }
     });
 
     cooldownCtrls.find('.js-reset').click(function resetClick() {
