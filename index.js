@@ -64,6 +64,9 @@ function Train(extensionApi) {
     nodecg.listenFor('resetCooldown', this.resetCooldown.bind(this));
 
     // temporary workaround for some bundles until I figure out how to make this better
+    nodecg.listenFor('getPassengers', function(data, cb) {
+        cb(nodecg.variables.passengers);
+    });
     nodecg.listenFor('getDayTotal', function(data, cb) {
         cb(nodecg.variables.dayTotal);
     });
@@ -129,8 +132,6 @@ Train.prototype.startCooldown = function () {
     nodecg.variables.remainingTime = nodecg.variables.duration;
     nodecg.variables.isCooldownActive = true;
     this._timer = setInterval(this.tickCooldown.bind(this), 1000);
-
-    nodecg.variables.passengers++;
 
     nodecg.sendMessage('cooldownStart');
 };
