@@ -62,6 +62,12 @@ function Train(extensionApi) {
     nodecg.listenFor('startCooldown', this.startCooldown.bind(this));
     nodecg.listenFor('endCooldown', this.endCooldown.bind(this));
     nodecg.listenFor('resetCooldown', this.resetCooldown.bind(this));
+
+    // temporary workaround for some bundles until I figure out how to make this better
+    nodecg.listenFor('getDayTotal', function(data, cb) {
+        console.log('heard getDaytotal');
+        cb(nodecg.variables.dayTotal);
+    });
 }
 
 Train.prototype.initializeOptions = function() {
