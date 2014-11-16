@@ -21,10 +21,11 @@
       </div>
       <div class="column">
         <div class="ncg-label">Day Total</div>
-        <div style="margin-top: 0px; font-weight: bold; font-size: 200%;" class="js-daytotal"></div>
+        <div style="margin-top: 0px; font-weight: bold; font-size: 200%;" class="js-daytotal reset-target"></div>
+        <button data-toggle="modal" data-target="#eol-hypetrain_resetmodal" class="btn btn-primary btn-xs reset-btn">Reset</button>
       </div>
     </div>
-    <div style="margin-top: 4px;" class="btn-group btn-group-justified">
+    <div style="margin-top: -24px;" class="btn-group btn-group-justified">
       <div class="btn-group">
         <button data-toggle="modal" data-target="#eol-hypetrain_modal" class="btn btn-primary btn-xs">Settings</button>
       </div>
@@ -43,8 +44,8 @@
           <div class="column js-cooldownCtrls">
             <h2 style="text-align: center; margin-top: 0px;">Cooldown</h2>
             <div class="ncg-label">Duration</div>
-            <div class="input-group js-duration"><span class="input-group-addon">Seconds</span>
-              <input type="number" class="form-control"/>
+            <div class="input-group"><span class="input-group-addon">Seconds</span>
+              <input type="number" class="form-control js-duration"/>
             </div>
             <div class="ncg-label">Manual Controls</div>
             <div style="margin-top: 4px;" class="ncg-btn-group">
@@ -60,14 +61,14 @@
           </div>
           <div class="column js-trainCtrls">
             <h2 style="text-align: center; margin-top: 0px;">Train</h2>
-            <div class="input-group js-passengers"><span class="input-group-addon">Passengers</span>
-              <input type="number" class="form-control"/>
+            <div class="input-group"><span class="input-group-addon">Passengers</span>
+              <input type="number" class="form-control js-passengers"/>
             </div>
-            <div style="margin-top:4px;" class="input-group js-threshold"><span class="input-group-addon">Threshold</span>
-              <input type="number" class="form-control js-current"/>
+            <div style="margin-top:4px;" class="input-group"><span class="input-group-addon">Threshold</span>
+              <input type="number" class="form-control js-threshold"/>
             </div>
-            <div style="margin-top:4px;" class="input-group js-daytotal"><span class="input-group-addon">Day Total</span>
-              <input type="number" class="form-control"/>
+            <div style="margin-top:4px;" class="input-group"><span class="input-group-addon">Day Total</span>
+              <input type="number" class="form-control js-daytotal"/>
             </div>
           </div>
         </div>
@@ -76,6 +77,26 @@
       <div class="modal-footer">
         <button type="button" data-dismiss="modal" class="btn btn-warning btn-xs js-apply">Apply</button>
         <button type="button" data-dismiss="modal" class="btn btn-default btn-xs">Close</button>
+      </div>
+    </div>
+    <!-- /.modal-content-->
+  </div>
+  <!-- /.modal-dialog-->
+</div>
+<!-- /.modal-->
+<div id="eol-hypetrain_resetmodal" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" data-dismiss="modal" class="close"><span aria-hidden="true">&#215;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Reset Donation Stats</h4>
+      </div>
+      <div class="modal-body">
+        <div role="alert" class="alert alert-info">The timeframe of "Day" is not automatically determined. It will only reset when you explictly tell it to.</div><p>Are you sure you wish to reset <span class="js-period" style="font-weight: bold;">day</span> stats?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn btn-danger btn-xs js-reset">Yes, reset</button>
+        <button type="button" data-dismiss="modal" class="btn btn-default btn-xs">No, do not reset</button>
       </div>
     </div>
     <!-- /.modal-content-->

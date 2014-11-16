@@ -3,74 +3,89 @@
 // Exports a train singleton
 var db = require('./backend/db.js');
 var Q = require('q');
-var io = require('../../server.js');
 var extend = require('extend');
 var fs = require('fs');
 var log = require('../../lib/logger');
+var nodecg = {};
 
-function Train() {
+function Train(extensionApi) {
+    if ( Train.prototype._singletonInstance ) {
+        return Train.prototype._singletonInstance;
+    }
+    Train.prototype._singletonInstance = this;
+
+    nodecg = extensionApi;
     var self = this;
 
     // These properties are transient and are not persisted in the DB
-    this.elapsedTime = 0;
-    this.remainingTime = 0;
+    nodecg.declareSyncedVar({ variableName: 'elapsedTime', initialVal: 0 });
+    nodecg.declareSyncedVar({ variableName: 'remainingTime', initialVal: 0 });
+    nodecg.declareSyncedVar({ variableName: 'isCooldownActive', initialVal: false });
+
     this._timer = null;
 
-    // Set up config
-    var config = {};
-    Object.defineProperty( this, 'config', {
-        value: require('./backend/config'),
-        writable: false,
-        enumerable: true
-    });
+    // Set up options
+    this.options = {};
+    this.initializeOptions();
 
     this.init()
-        .then(listen)
+        .then(function(train) {
+            nodecg.declareSyncedVar({ variableName: 'passengers',
+                initialVal: train.passengers,
+                setter: function(newVal) {
+                    self.write({passengers: newVal});
+                }
+            });
+            nodecg.declareSyncedVar({ variableName: 'dayTotal',
+                initialVal: train.dayTotal,
+                setter: function(newVal) {
+                    self.write({dayTotal: newVal});
+                }
+            });
+            nodecg.declareSyncedVar({ variableName: 'threshold',
+                initialVal: train.threshold,
+                setter: function(newVal) {
+                    self.write({threshold: newVal});
+                }
+            });
+            nodecg.declareSyncedVar({ variableName: 'duration',
+                initialVal: train.duration,
+                setter: function(newVal) {
+                    self.write({duration: newVal});
+                }
+            });
+        })
         .fail(function(err) {
             throw err;
         });
 
-    function listen() {
-        io.sockets.on('connection', function onConnection(socket) {
-            socket.on('message', function onMessage(data, fn) {
-                if (data.bundleName !== 'eol-hypetrain') {
-                    return;
-                }
+    nodecg.listenFor('startCooldown', this.startCooldown.bind(this));
+    nodecg.listenFor('endCooldown', this.endCooldown.bind(this));
+    nodecg.listenFor('resetCooldown', this.resetCooldown.bind(this));
 
-                // When the view page loads, it will request the history
-                if (data.messageName === 'getTrain') {
-                    self.get()
-                        .then(fn)
-                        .fail(function (err) {
-                            log.error('[eol-hypetrain] failed to get train: ' + err);
-                            fn(null);
-                        });
-                }
-
-                if (data.messageName === 'setTrain') {
-                    self.set(data.content)
-                        .then(fn)
-                        .fail(function (err) {
-                            log.error('[eol-hypetrain] failed to set train: ' + err);
-                            fn(null);
-                        });
-                }
-
-                if (data.messageName === 'startCooldown') {
-                    self.startCooldown();
-                }
-
-                if (data.messageName === 'endCooldown') {
-                    self.endCooldown();
-                }
-
-                if (data.messageName === 'resetCooldown') {
-                    self.resetCooldown();
-                }
-            });
-        });
-    }
+    // temporary workaround for some bundles until I figure out how to make this better
+    nodecg.listenFor('getPassengers', function(data, cb) {
+        cb(nodecg.variables.passengers);
+    });
+    nodecg.listenFor('getDayTotal', function(data, cb) {
+        cb(nodecg.variables.dayTotal);
+    });
 }
+
+Train.prototype.initializeOptions = function() {
+    var cfgPath = __dirname + '/config.json';
+    var config = {};
+    if (fs.existsSync(cfgPath)) {
+        config = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
+    }
+
+    // Intialize options to default values
+    this.options.autoStartCooldown = false; // If 'true', automatically starts the cooldown when a passenger is added
+    this.options.resetAfterThreshold = false; // If 'true', hitting the threshold causes the train to reset to zero
+
+    // Overwrite defaults with any options from the config
+    extend (true, this.options, config);
+};
 
 Train.prototype.init = function() {
     var deferred = Q.defer();
@@ -102,112 +117,45 @@ Train.prototype.init = function() {
     return deferred.promise;
 };
 
-Train.prototype.get = function() {
-    var self = this;
-    var deferred = Q.defer();
-    db.findOne({ _id: 'train' }, function (err, train) {
-        if (err) {
-            deferred.reject(new Error(err));
-        } else {
-            train.elapsedTime = self.elapsedTime;
-            train.remainingTime = self.remainingTime;
-            train.config = self.config;
-            deferred.resolve(train);
-        }
-    });
-    return deferred.promise;
-};
-
 // Allows for setting any or all of the properties.
-Train.prototype.set = function(args) {
-    if (args.threshold && this.config.disableThresholdEditing) {
-        delete args.threshold;
-        log.warn('[eol-hypetrain] Blocked attempt to edit threshold while disableThresholdEditing was set to "true"');
-    }
-
-    var self = this;
-    var deferred = Q.defer();
+Train.prototype.write = function(args) {
     db.update({ _id: 'train' }, { $set: args }, { upsert: true }, function (err, numAdded) {
-        if (err) {
-            deferred.reject(new Error(err));
-        } else {
-            self.broadcast();
-            deferred.resolve(numAdded);
-        }
+        if (err)
+            log.error(err.stack);
     });
-    return deferred.promise;
 };
 
 Train.prototype.startCooldown = function () {
     this._killTimer(); // Kill any existing cooldown timer
 
-    var self = this;
-    this.get()
-        .then(function(train) {
-            self.elapsedTime = 0;
-            self.remainingTime = train.duration;
-            self._timer = setInterval(self.tickCooldown.bind(self), 1000);
+    nodecg.variables.elapsedTime = 0;
+    nodecg.variables.remainingTime = nodecg.variables.duration;
+    nodecg.variables.isCooldownActive = true;
+    this._timer = setInterval(this.tickCooldown.bind(this), 1000);
 
-            io.sockets.json.send({
-                bundleName: 'eol-hypetrain',
-                messageName: 'cooldownStart',
-                content: {
-                    elapsedTime: self.elapsedTime,
-                    remainingTime: self.remainingTime,
-                    duration: self.duration
-                }
-            });
-        });
+    nodecg.sendMessage('cooldownStart');
 };
 
 Train.prototype.tickCooldown = function() {
-    this.elapsedTime++;
-    this.remainingTime--;
+    nodecg.variables.elapsedTime++;
+    nodecg.variables.remainingTime--;
 
-    if (this.remainingTime <= 0) {
-        this.remainingTime = 0; // force to zero if we somehow went negative
+    if (nodecg.variables.remainingTime <= 0) {
+        nodecg.variables.remainingTime = 0; // force to zero if we somehow went negative
         this.endCooldown();
     }
-
-    io.sockets.json.send({
-        bundleName: 'eol-hypetrain',
-        messageName: 'cooldownTick',
-        content: {
-            elapsedTime: this.elapsedTime,
-            remainingTime: this.remainingTime
-        }
-    });
 };
 
 Train.prototype.resetCooldown = function() {
-    var self = this;
-    this.get()
-        .then(function(train) {
-            self.elapsedTime = 0;
-            self.remainingTime = train.duration;
-            self.tickCooldown();
-        });
+    nodecg.variables.elapsedTime = 0;
+    nodecg.variables.remainingTime = nodecg.variables.duration;
 };
 
 Train.prototype.endCooldown = function() {
     this._killTimer();
-
-    // Another hack to make sure all listeners register zero seconds remaining
-    io.sockets.json.send({
-        bundleName: 'eol-hypetrain',
-        messageName: 'cooldownTick',
-        content: {
-            elapsedTime: 0,
-            remainingTime: 0
-        }
-    });
-
-    io.sockets.json.send({
-        bundleName: 'eol-hypetrain',
-        messageName: 'cooldownEnd'
-    });
-
-    this.set({ passengers: 0 });
+    this.write({ passengers: 0 });
+    nodecg.variables.isCooldownActive = false;
+    nodecg.sendMessage('cooldownEnd');
 };
 
 Train.prototype._killTimer = function () {
@@ -215,54 +163,16 @@ Train.prototype._killTimer = function () {
         clearInterval(this._timer);
         this._timer = null;
     }
-    this.elapsedTime = 0;
-    this.remainingTime = 0;
 };
 
 Train.prototype.addPassenger = function() {
-    var self = this;
-    var deferred = Q.defer();
-    db.update({ _id: 'train' }, { $inc: { passengers: 1, dayTotal: 1 } }, { upsert: true }, function (err) {
-        if (err) {
-            deferred.reject(new Error(err));
-        } else {
-            // This is somewhat convoluted, but the idea is to start the cooldown (will automatically restart if necessary)
-            // and then broadcast out all the new data, but then leverage the ".get" that .broadcast did and return that
-            // so that we don't have to do another ".get"
-            if (self.config.autoStartCooldown)
-                self.startCooldown();
+    nodecg.variables.passengers++;
+    nodecg.variables.dayTotal++;
 
-            self.broadcast()
-                .then(function(train) {
-                    deferred.resolve(train);
-                });
-        }
-    });
-    return deferred.promise;
+    if (this.options.autoStartCooldown)
+        this.startCooldown();
+
+    return nodecg.variables;
 };
 
-Train.prototype.broadcast = function () {
-    var self = this;
-    var deferred = Q.defer();
-    this.get()
-        .then(function (train) {
-            train.isHype = train.passengers >= train.threshold;
-            if (train.isHype && self.config.resetAfterThreshold) {
-                self.set({ passengers: 0 });
-            }
-
-            io.sockets.json.send({
-                bundleName: 'eol-hypetrain',
-                messageName: 'trainBroadcast',
-                content: train
-            });
-            deferred.resolve(train);
-        })
-        .fail(function() {
-            log.error('[eol-hypetrain] failed to broadcast train update:', err);
-            deferred.reject(new Error(err));
-        });
-    return deferred.promise;
-};
-
-module.exports = new Train();
+module.exports = function(extensionApi) { return new Train(extensionApi) };

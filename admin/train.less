@@ -21,25 +21,18 @@
     text-align: right;
 }
 
-/* FLAGGED NOTES */
-#gw-notestack_flagged {
-    max-height: 308px;
-    overflow-y: scroll;
+#eol-hypetrain .reset-target {
+    transition: opacity 100ms linear;
+}
 
-    > .flagged {
-        width: 100%;
-    }
+#eol-hypetrain .reset-btn {
+    position: relative;
+    top: -36px;
+    opacity: 0;
 
-    .btn {
-        padding: 8px 4px;
-        width: 22px;
-    }
+    transition: opacity 100ms linear;
 
-    .info:hover {
-        cursor: help;
-    }
-
-    .popover {
-        max-width: 500px;
+    &:hover {
+        opacity: 1;
     }
 }
