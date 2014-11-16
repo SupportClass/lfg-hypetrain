@@ -65,7 +65,6 @@ function Train(extensionApi) {
 
     // temporary workaround for some bundles until I figure out how to make this better
     nodecg.listenFor('getDayTotal', function(data, cb) {
-        console.log('heard getDaytotal');
         cb(nodecg.variables.dayTotal);
     });
 }
