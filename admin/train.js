@@ -69,7 +69,7 @@ $(document).ready(function () {
         nodecg.sendMessage('endCooldown')
     });
 
-    //daytop resetting
+    //dayTotal resetting
     panel.find('.reset-btn')
         .on("mouseenter", function() {
             $(this).siblings('.reset-target').css('opacity', 0);
