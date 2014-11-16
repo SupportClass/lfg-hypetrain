@@ -16,16 +16,20 @@ $(document).ready(function () {
     nodecg.declareSyncedVar({ variableName: 'remainingTime',
         initialVal: 0,
         setter: function(newVal) {
-            if (newVal <= 0) {
-                cooldownEl.text('OFF');
-                this.passengers = 0;
-            } else {
-                var minutes = Math.floor(newVal / 60);
-                var seconds = newVal - minutes * 60;
-                if (seconds < 10)
-                    seconds = '0' + seconds;
+            var minutes = Math.floor(newVal / 60);
+            var seconds = newVal - minutes * 60;
+            if (seconds < 10)
+                seconds = '0' + seconds;
 
-                cooldownEl.text(minutes + ':' + seconds);
+            cooldownEl.text(minutes + ':' + seconds);
+        }
+    });
+
+    nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
+        initialVal: false,
+        setter: function(newVal) {
+            if (newVal === false) {
+                cooldownEl.text('OFF');
             }
         }
     });

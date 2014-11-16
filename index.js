@@ -18,9 +18,9 @@ function Train(extensionApi) {
     var self = this;
 
     // These properties are transient and are not persisted in the DB
-
     nodecg.declareSyncedVar({ variableName: 'elapsedTime', initialVal: 0 });
     nodecg.declareSyncedVar({ variableName: 'remainingTime', initialVal: 0 });
+    nodecg.declareSyncedVar({ variableName: 'isCooldownActive', initialVal: false });
 
     this._timer = null;
 
@@ -122,6 +122,7 @@ Train.prototype.startCooldown = function () {
 
     nodecg.variables.elapsedTime = 0;
     nodecg.variables.remainingTime = nodecg.variables.duration;
+    nodecg.variables.isCooldownActive = true;
     this._timer = setInterval(this.tickCooldown.bind(this), 1000);
 
     nodecg.variables.passengers++;
@@ -147,6 +148,7 @@ Train.prototype.resetCooldown = function() {
 Train.prototype.endCooldown = function() {
     this._killTimer();
     this.write({ passengers: 0 });
+    nodecg.variables.isCooldownActive = false;
     nodecg.sendMessage('cooldownEnd');
 };
 
