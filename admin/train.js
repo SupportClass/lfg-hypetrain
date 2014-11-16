@@ -68,8 +68,4 @@ $(document).ready(function () {
     cooldownCtrls.find('.js-end').click(function endClick() {
         nodecg.sendMessage('endCooldown')
     });
-
-    $('#eol-hypetrain_test').click(function(){
-        nodecg.sendMessage('startCooldown');
-    });
 });
