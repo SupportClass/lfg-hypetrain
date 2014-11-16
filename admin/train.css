@@ -17,21 +17,15 @@
 #eol-hypetrain_modal input {
   text-align: right;
 }
-/* FLAGGED NOTES */
-#gw-notestack_flagged {
-  max-height: 308px;
-  overflow-y: scroll;
+#eol-hypetrain .reset-target {
+  transition: opacity 100ms linear;
 }
-#gw-notestack_flagged > .flagged {
-  width: 100%;
+#eol-hypetrain .reset-btn {
+  position: relative;
+  top: -36px;
+  opacity: 0;
+  transition: opacity 100ms linear;
 }
-#gw-notestack_flagged .btn {
-  padding: 8px 4px;
-  width: 22px;
-}
-#gw-notestack_flagged .info:hover {
-  cursor: help;
-}
-#gw-notestack_flagged .popover {
-  max-width: 500px;
+#eol-hypetrain .reset-btn:hover {
+  opacity: 1;
 }

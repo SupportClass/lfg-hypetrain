@@ -16,8 +16,9 @@
                 .js-cooldown(style="margin-top: 0px; font-weight: bold; font-size: 200%;") OFF
             .column
                 .ncg-label Day Total
-                .js-daytotal(style="margin-top: 0px; font-weight: bold; font-size: 200%;")
-        .btn-group.btn-group-justified(style="margin-top: 4px;")
+                .js-daytotal.reset-target(style="margin-top: 0px; font-weight: bold; font-size: 200%;")
+                button.btn.btn-primary.btn-xs.reset-btn(data-toggle="modal" data-target="#eol-hypetrain_resetmodal") Reset
+        .btn-group.btn-group-justified(style="margin-top: -24px;")
             .btn-group
                 button.btn.btn-primary.btn-xs(data-toggle="modal" data-target="#eol-hypetrain_modal") Settings
 
@@ -64,6 +65,25 @@
             .modal-footer
                 button.btn.btn-warning.btn-xs.js-apply(type="button", data-dismiss="modal") Apply
                 button.btn.btn-default.btn-xs(type="button", data-dismiss="modal") Close
+        // /.modal-content
+    // /.modal-dialog
+// /.modal
+
+#eol-hypetrain_resetmodal.modal.fade
+    .modal-dialog
+        .modal-content
+            .modal-header
+                button.close(type="button", data-dismiss="modal")
+                    span(aria-hidden="true") &#215;
+                    span.sr-only Close
+                h4.modal-title Reset Donation Stats
+            .modal-body
+                .alert.alert-info(role="alert")
+                    | The timeframe of "Day" is not automatically determined. It will only reset when you explictly tell it to.
+                <p>Are you sure you wish to reset <span class="js-period" style="font-weight: bold;">day</span> stats?</p>
+            .modal-footer
+                button.btn.btn-danger.btn-xs.js-reset(type="button", data-dismiss="modal") Yes, reset
+                button.btn.btn-default.btn-xs(type="button", data-dismiss="modal") No, do not reset
         // /.modal-content
     // /.modal-dialog
 // /.modal

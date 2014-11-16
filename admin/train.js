@@ -68,4 +68,17 @@ $(document).ready(function () {
     cooldownCtrls.find('.js-end').click(function endClick() {
         nodecg.sendMessage('endCooldown')
     });
+
+    //daytop resetting
+    panel.find('.reset-btn')
+        .on("mouseenter", function() {
+            $(this).siblings('.reset-target').css('opacity', 0);
+        })
+        .on("mouseleave", function() {
+            $(this).siblings('.reset-target').css('opacity', 1);
+        });
+
+    $('#eol-hypetrain_resetmodal').find('.js-reset').click(function() {
+        nodecg.variables.dayTotal = 0;
+    });
 });
