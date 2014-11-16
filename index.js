@@ -159,11 +159,12 @@ Train.prototype._killTimer = function () {
 
 Train.prototype.addPassenger = function() {
     nodecg.variables.passengers++;
+    nodecg.variables.dayTotal++;
 
     if (this.options.autoStartCooldown)
         this.startCooldown();
 
-    return nodecg.variables
+    return nodecg.variables;
 };
 
 module.exports = function(extensionApi) { return new Train(extensionApi) };
