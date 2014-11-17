@@ -154,6 +154,7 @@ Train.prototype.resetCooldown = function() {
 Train.prototype.endCooldown = function() {
     this._killTimer();
     this.write({ passengers: 0 });
+    nodecg.variables.passengers = 0;
     nodecg.variables.isCooldownActive = false;
     nodecg.sendMessage('cooldownEnd');
 };
