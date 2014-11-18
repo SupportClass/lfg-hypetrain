@@ -1,7 +1,7 @@
 'use strict';
 
 // Exports a train singleton
-var db = require('./backend/db.js');
+var db = require('./extension/db');
 var Q = require('q');
 var extend = require('extend');
 var fs = require('fs');
@@ -9,7 +9,7 @@ var log = require('../../lib/logger');
 var nodecg = {};
 
 function Train(extensionApi) {
-    if ( Train.prototype._singletonInstance ) {
+    if (Train.prototype._singletonInstance) {
         return Train.prototype._singletonInstance;
     }
     Train.prototype._singletonInstance = this;
@@ -25,8 +25,7 @@ function Train(extensionApi) {
     this._timer = null;
 
     // Set up options
-    this.options = {};
-    this.initializeOptions();
+    this.options = require('./extension/config');
 
     this.init()
         .then(function(train) {
@@ -71,21 +70,6 @@ function Train(extensionApi) {
         cb(nodecg.variables.dayTotal);
     });
 }
-
-Train.prototype.initializeOptions = function() {
-    var cfgPath = __dirname + '/config.json';
-    var config = {};
-    if (fs.existsSync(cfgPath)) {
-        config = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
-    }
-
-    // Intialize options to default values
-    this.options.autoStartCooldown = false; // If 'true', automatically starts the cooldown when a passenger is added
-    this.options.resetAfterThreshold = false; // If 'true', hitting the threshold causes the train to reset to zero
-
-    // Overwrite defaults with any options from the config
-    extend (true, this.options, config);
-};
 
 Train.prototype.init = function() {
     var deferred = Q.defer();
@@ -174,6 +158,13 @@ Train.prototype.addPassenger = function() {
 
     var train = nodecg.variables;
     train.isHype = train.passengers >= train.threshold;
+
+    if (train.isHype && this.options.resetAfterThreshold) {
+        nodecg.variables.passengers = 0;
+        this.endCooldown();
+    }
+
+
     return train;
 };
 

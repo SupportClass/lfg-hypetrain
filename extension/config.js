@@ -12,10 +12,8 @@ var config = {
 
 // Load user config if it exists, and merge it
 var cfgPath = path.join(__dirname, '../config.json');
-console.log(cfgPath);
 if (fs.existsSync(cfgPath)) {
     var userConfig = JSON.parse(fs.readFileSync(cfgPath, 'utf8'));
-    console.log(userConfig);
     extend (true, config, userConfig);
 }
 
