@@ -172,7 +172,9 @@ Train.prototype.addPassenger = function() {
     if (this.options.autoStartCooldown)
         this.startCooldown();
 
-    return nodecg.variables;
+    var train = nodecg.variables;
+    train.isHype = train.passengers >= train.threshold;
+    return train;
 };
 
 module.exports = function(extensionApi) { return new Train(extensionApi) };
