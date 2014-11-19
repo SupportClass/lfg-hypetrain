@@ -26,6 +26,7 @@ function Train(extensionApi) {
 
     // Set up options
     this.options = require('./extension/config');
+    Object.freeze(this.options);
 
     this.init()
         .then(function(train) {
