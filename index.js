@@ -154,17 +154,15 @@ Train.prototype.addPassenger = function() {
     nodecg.variables.passengers++;
     nodecg.variables.dayTotal++;
 
-    if (this.options.autoStartCooldown)
-        this.startCooldown();
-
     var train = nodecg.variables;
     train.isHype = train.passengers >= train.threshold;
 
     if (train.isHype && this.options.resetAfterThreshold) {
         nodecg.variables.passengers = 0;
         this.endCooldown();
+    } else if (this.options.autoStartCooldown) {
+        this.startCooldown();
     }
-
 
     return train;
 };
