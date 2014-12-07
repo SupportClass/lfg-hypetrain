@@ -165,6 +165,8 @@ function initOptions() {
         nodecg.bundleConfig.autoStartCooldown = false;
     if (typeof(nodecg.bundleConfig.resetAfterThreshold) === 'undefined')
         nodecg.bundleConfig.resetAfterThreshold = false;
+    if (typeof(nodecg.bundleConfig.disableThresholdEditing) === 'undefined')
+        nodecg.bundleConfig.disableThresholdEditing = false;
 }
 
 module.exports = function(extensionApi) { return new Train(extensionApi) };
