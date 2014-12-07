@@ -1,26 +1,21 @@
-#eol-hypetrain.panel.panel-default.panel-span-2
-    .panel-heading
-        h3.panel-title Train
-        i.fa.fa-bus.panel-icon
-    .panel-body
-        div(style="display: flex; text-align: center;")
-            .column
-                .ncg-label(style="margin-top: 0px;") Passengers
-                .js-passengers(style="font-weight: bold; font-size: 200%;")
-            .column
-                .ncg-label(style="margin-top: 0px;") Threshold
-                .js-threshold(style="font-weight: bold; font-size: 200%;")
-        div(style="display: flex; text-align: center;")
-            .column
-                .ncg-label Cooldown
-                .js-cooldown(style="margin-top: 0px; font-weight: bold; font-size: 200%;") OFF
-            .column
-                .ncg-label Day Total
-                .js-daytotal.reset-target(style="margin-top: 0px; font-weight: bold; font-size: 200%;")
-                button.btn.btn-primary.btn-xs.reset-btn(data-toggle="modal" data-target="#eol-hypetrain_resetmodal") Reset
-        .btn-group.btn-group-justified(style="margin-top: -24px;")
-            .btn-group
-                button.btn.btn-primary.btn-xs(data-toggle="modal" data-target="#eol-hypetrain_modal") Settings
+div(style="display: flex; text-align: center;")
+    .column
+        .ncg-label(style="margin-top: 0px;") Passengers
+        .js-passengers(style="font-weight: bold; font-size: 200%;") ?
+    .column
+        .ncg-label(style="margin-top: 0px;") Threshold
+        .js-threshold(style="font-weight: bold; font-size: 200%;") ?
+div(style="display: flex; text-align: center;")
+    .column
+        .ncg-label Cooldown
+        .js-cooldown(style="margin-top: 0px; font-weight: bold; font-size: 200%;") OFF
+    .column
+        .ncg-label Day Total
+        .js-daytotal.reset-target(style="margin-top: 0px; font-weight: bold; font-size: 200%;") ?
+        button.btn.btn-primary.btn-xs.reset-btn(data-toggle="modal" data-target="#eol-hypetrain_resetmodal") Reset
+.btn-group.btn-group-justified(style="margin-top: -24px;")
+    .btn-group
+        button.btn.btn-primary.btn-xs(data-toggle="modal" data-target="#eol-hypetrain_modal") Settings
 
 #eol-hypetrain_modal.modal.fade
     .modal-dialog
@@ -54,14 +49,17 @@
                             input.form-control.js-passengers(type="number")
                         .input-group(style="margin-top:4px;")
                             span.input-group-addon Threshold
-                            input.form-control.js-threshold(type="number")
+                            if bundleConfig.disableThresholdEditing
+                                input.form-control.js-threshold(type="number", disabled, title="The current configuration has disabled editing of this property")
+                            else
+                                input.form-control.js-threshold(type="number")
                         .input-group(style="margin-top:4px;")
                             span.input-group-addon Day Total
                             input.form-control.js-daytotal(type="number")
 
                 .alert.alert-danger(role="alert", style="margin-top: 8px;")
                     b WARNING!
-                    | &nbsp&nbspChanges might not take effect until the next subscriber.
+                    | &nbsp&nbspChanges might not be reflected by all graphics until the next subscription.
             .modal-footer
                 button.btn.btn-warning.btn-xs.js-apply(type="button", data-dismiss="modal") Apply
                 button.btn.btn-default.btn-xs(type="button", data-dismiss="modal") Close

@@ -1,0 +1,9 @@
+[
+  {
+    "name": "train",
+    "title": "Hype train",
+    "width": 2,
+    "file": "train.jade",
+    "faIcon": "fa-bus"
+  }
+]

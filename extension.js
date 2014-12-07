@@ -8,25 +8,18 @@ var fs = require('fs');
 var log = require('../../lib/logger');
 var nodecg = {};
 
-function Train(extensionApi) {
-    if (Train.prototype._singletonInstance) {
-        return Train.prototype._singletonInstance;
-    }
-    Train.prototype._singletonInstance = this;
+var cdTimer = null;
 
+function Train(extensionApi) {
     nodecg = extensionApi;
     var self = this;
+
+    initOptions();
 
     // These properties are transient and are not persisted in the DB
     nodecg.declareSyncedVar({ variableName: 'elapsedTime', initialVal: 0 });
     nodecg.declareSyncedVar({ variableName: 'remainingTime', initialVal: 0 });
     nodecg.declareSyncedVar({ variableName: 'isCooldownActive', initialVal: false });
-
-    this._timer = null;
-
-    // Set up options
-    this.options = require('./extension/config');
-    Object.freeze(this.options);
 
     this.init()
         .then(function(train) {
@@ -111,12 +104,12 @@ Train.prototype.write = function(args) {
 };
 
 Train.prototype.startCooldown = function () {
-    this._killTimer(); // Kill any existing cooldown timer
+    _killTimer(); // Kill any existing cooldown timer
 
     nodecg.variables.elapsedTime = 0;
     nodecg.variables.remainingTime = nodecg.variables.duration;
     nodecg.variables.isCooldownActive = true;
-    this._timer = setInterval(this.tickCooldown.bind(this), 1000);
+    cdTimer = setInterval(this.tickCooldown.bind(this), 1000);
 
     nodecg.sendMessage('cooldownStart');
 };
@@ -137,17 +130,10 @@ Train.prototype.resetCooldown = function() {
 };
 
 Train.prototype.endCooldown = function() {
-    this._killTimer();
+    _killTimer();
     nodecg.variables.passengers = 0;
     nodecg.variables.isCooldownActive = false;
     nodecg.sendMessage('cooldownEnd');
-};
-
-Train.prototype._killTimer = function () {
-    if (this._timer !== null) {
-        clearInterval(this._timer);
-        this._timer = null;
-    }
 };
 
 Train.prototype.addPassenger = function() {
@@ -157,14 +143,28 @@ Train.prototype.addPassenger = function() {
     var train = nodecg.variables;
     train.isHype = train.passengers >= train.threshold;
 
-    if (train.isHype && this.options.resetAfterThreshold) {
+    if (train.isHype && nodecg.bundleConfig.resetAfterThreshold) {
         nodecg.variables.passengers = 0;
         this.endCooldown();
-    } else if (this.options.autoStartCooldown) {
+    } else if (nodecg.bundleConfig.autoStartCooldown) {
         this.startCooldown();
     }
 
     return train;
 };
+
+function _killTimer() {
+    if (cdTimer !== null) {
+        clearInterval(cdTimer);
+        cdTimer = null;
+    }
+}
+
+function initOptions() {
+    if (typeof(nodecg.bundleConfig.autoStartCooldown) === 'undefined')
+        nodecg.bundleConfig.autoStartCooldown = false;
+    if (typeof(nodecg.bundleConfig.resetAfterThreshold) === 'undefined')
+        nodecg.bundleConfig.resetAfterThreshold = false;
+}
 
 module.exports = function(extensionApi) { return new Train(extensionApi) };
