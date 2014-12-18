@@ -10,8 +10,7 @@ It does not automatically listen for donations and subscriptions, but rather rel
 - (OPTIONAL) Create `nodecg/cfg/lfg-hypetrain.json` to configure `lfg-hypetrain`
 
 ### Config Example
-```
-#!json
+```json
 {
     "autoStartCooldown": false,
     "resetAfterThreshold": false,
@@ -24,8 +23,7 @@ lfg-hypetrain isn't very useful on its own. It is a helper bundle meant to be le
 
 ### Messages sent
 lfg-hypetrain broadcasts the following events that you can listen to in your bundle:
-```
-#!javascript
+```javascript
 nodecg.listenFor('cooldownStart', 'lfg-hypetrain', callback);
 nodecg.listenFor('cooldownTick', 'lfg-hypetrain', callback); // ticks every second with the elapsedTime and remainingTime
 nodecg.listenFor('cooldownEnd', 'lfg-hypetrain', callback);
@@ -34,8 +32,7 @@ nodecg.listenFor('cooldownEnd', 'lfg-hypetrain', callback);
 
 ### Messages received
 `lfg-hypetrain` can receive the following messages:
-```
-#!javascript
+```javascript
 nodecg.sendMessageToBundle('getPassengers', 'lfg-hypetrain', callback);
 nodecg.sendMessageToBundle('getDayTotal', 'lfg-hypetrain', callback);
 nodecg.sendMessageToBundle('startCooldown', 'lfg-hypetrain');
@@ -47,8 +44,7 @@ nodecg.sendMessageToBundle('resetCooldown', 'lfg-hypetrain');
 ### Synced variables
 lfg-hypetrain makes extensive use of synced variables, all of which your bundle can access, either to listen to
 or modify directly.
-```
-#!javascript
+```javascript
 // The number of 'passengers' on the train
 nodecg.declareSyncedVar({ variableName: 'passengers',
     bundleName: 'lfg-hypetrain',
@@ -108,8 +104,7 @@ nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
 
 ### Use in other bundles' extensions
 To control the train, add code like the following to your bundle's extension:
-```
-#!javascript
+```javascript
 var train = nodecg.extensions['lfg-hypetrain'];
 var sublistener = nodecg.extensions['eol-sublistener'];
 
