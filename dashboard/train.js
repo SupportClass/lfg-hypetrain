@@ -1,6 +1,6 @@
 'use strict';
 
-var modal = $('#eol-hypetrain_modal');
+var modal = $('#lfg-hypetrain_modal');
 var panel = $bundle.filter('.train');
 var trainCtrls = modal.find('.js-trainCtrls');
 var cooldownCtrls = modal.find('.js-cooldownCtrls');
@@ -78,6 +78,6 @@ panel.find('.reset-btn')
         $(this).siblings('.reset-target').css('opacity', 1);
     });
 
-$('#eol-hypetrain_resetmodal').find('.js-reset').click(function() {
+$('#lfg-hypetrain_resetmodal').find('.js-reset').click(function() {
     nodecg.variables.dayTotal = 0;
 });

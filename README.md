@@ -1,4 +1,4 @@
-#eol-hypetrain
+#lfg-hypetrain
 This is a [NodeCG](http://github.com/nodecg/nodecg) bundle.
 
 This bundle manages the so-called "hype train" for subscriptions and/or donations.
@@ -6,8 +6,8 @@ It does not automatically listen for donations and subscriptions, but rather rel
 
 
 ## Installation
-- Install to `nodecg/bundles/eol-hypetrain`
-- (OPTIONAL) Create `nodecg/cfg/eol-hypetrain.json` to configure `eol-hypetrain`
+- Install to `nodecg/bundles/lfg-hypetrain`
+- (OPTIONAL) Create `nodecg/cfg/lfg-hypetrain.json` to configure `lfg-hypetrain`
 
 ### Config Example
 ```
@@ -20,38 +20,38 @@ It does not automatically listen for donations and subscriptions, but rather rel
 ```
 
 ## Usage
-eol-hypetrain isn't very useful on its own. It is a helper bundle meant to be leveraged by other bundles.
+lfg-hypetrain isn't very useful on its own. It is a helper bundle meant to be leveraged by other bundles.
 
 ### Messages sent
-eol-hypetrain broadcasts the following events that you can listen to in your bundle:
+lfg-hypetrain broadcasts the following events that you can listen to in your bundle:
 ```
 #!javascript
-nodecg.listenFor('cooldownStart', 'eol-hypetrain', callback);
-nodecg.listenFor('cooldownTick', 'eol-hypetrain', callback); // ticks every second with the elapsedTime and remainingTime
-nodecg.listenFor('cooldownEnd', 'eol-hypetrain', callback);
+nodecg.listenFor('cooldownStart', 'lfg-hypetrain', callback);
+nodecg.listenFor('cooldownTick', 'lfg-hypetrain', callback); // ticks every second with the elapsedTime and remainingTime
+nodecg.listenFor('cooldownEnd', 'lfg-hypetrain', callback);
 ```
 ... where `callback` is the name of a function with the signature `function callbackName(data)`
 
 ### Messages received
-`eol-hypetrain` can receive the following messages:
+`lfg-hypetrain` can receive the following messages:
 ```
 #!javascript
-nodecg.sendMessageToBundle('getPassengers', 'eol-hypetrain', callback);
-nodecg.sendMessageToBundle('getDayTotal', 'eol-hypetrain', callback);
-nodecg.sendMessageToBundle('startCooldown', 'eol-hypetrain');
-nodecg.sendMessageToBundle('endCooldown', 'eol-hypetrain');
-nodecg.sendMessageToBundle('resetCooldown', 'eol-hypetrain');
+nodecg.sendMessageToBundle('getPassengers', 'lfg-hypetrain', callback);
+nodecg.sendMessageToBundle('getDayTotal', 'lfg-hypetrain', callback);
+nodecg.sendMessageToBundle('startCooldown', 'lfg-hypetrain');
+nodecg.sendMessageToBundle('endCooldown', 'lfg-hypetrain');
+nodecg.sendMessageToBundle('resetCooldown', 'lfg-hypetrain');
 ```
 ... where `callback` is the name of a function with the signature `function callbackName(data)`
 
 ### Synced variables
-eol-hypetrain makes extensive use of synced variables, all of which your bundle can access, either to listen to
+lfg-hypetrain makes extensive use of synced variables, all of which your bundle can access, either to listen to
 or modify directly.
 ```
 #!javascript
 // The number of 'passengers' on the train
 nodecg.declareSyncedVar({ variableName: 'passengers',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -59,7 +59,7 @@ nodecg.declareSyncedVar({ variableName: 'passengers',
 
 // How many passengers there have been today
 nodecg.declareSyncedVar({ variableName: 'dayTotal',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -67,7 +67,7 @@ nodecg.declareSyncedVar({ variableName: 'dayTotal',
 
 // Number of passengers needed to engage 'hype' status
 nodecg.declareSyncedVar({ variableName: 'threshold',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -75,7 +75,7 @@ nodecg.declareSyncedVar({ variableName: 'threshold',
 
 // Duration of the cooldown
 nodecg.declareSyncedVar({ variableName: 'duration',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -83,7 +83,7 @@ nodecg.declareSyncedVar({ variableName: 'duration',
 
 // How much time has elapsed in the cooldown
 nodecg.declareSyncedVar({ variableName: 'elapsedTime',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -91,7 +91,7 @@ nodecg.declareSyncedVar({ variableName: 'elapsedTime',
 
 // How much time is left in the cooldown
 nodecg.declareSyncedVar({ variableName: 'remainingTime',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -99,7 +99,7 @@ nodecg.declareSyncedVar({ variableName: 'remainingTime',
 
 // Is the countdown currently active and ticking
 nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
-    bundleName: 'eol-hypetrain',
+    bundleName: 'lfg-hypetrain',
     setter: function(newVal) {
         // do work
     }
@@ -110,7 +110,7 @@ nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
 To control the train, add code like the following to your bundle's extension:
 ```
 #!javascript
-var train = nodecg.extensions['eol-hypetrain'];
+var train = nodecg.extensions['lfg-hypetrain'];
 var sublistener = nodecg.extensions['eol-sublistener'];
 
 sublistener.on('subscription', function subscription(data) {

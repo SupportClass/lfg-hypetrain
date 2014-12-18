@@ -1,13 +1,13 @@
 {
-    "name": "eol-hypetrain",
-    "version": "0.0.1",
-    "nodecgDependency": "~0.2.0",
+    "name": "lfg-hypetrain",
+    "version": "1.0.0",
+    "nodecgDependency": "~0.3.0",
     "homepage": "http://alexvan.camp/",
     "authors": [
         "Alex Van Camp <email@alexvan.camp>"
     ],
     "description": "Provides a hype train for donations/subscriptions. Has no view page.",
-    "license": "Commercial",
+    "license": "MIT",
     "extension": {
         "express": false,
         "path": "extension.js"
