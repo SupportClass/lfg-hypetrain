@@ -122,3 +122,6 @@ sublistener.on('subscription', function onSubscription(subscription) {
 });
 ```
 
+### License
+lfg-hypetrain is provided under the MIT license, which is available to read in the [LICENSE][] file.
+[license]: LICENSE
