@@ -108,7 +108,7 @@ To control the train, add code like the following to your bundle's extension:
 var train = nodecg.extensions['lfg-hypetrain'];
 var sublistener = nodecg.extensions['lfg-sublistener'];
 
-sublistener.on('subscription', function subscription(data) {
+sublistener.on('subscription', function onSubscription(subscription) {
     // train.addPassenger increments the passenger count and returns the current state of the train
     subscription.train = train.addPassenger();
     nodecg.sendMessage('subscription', subscription);
