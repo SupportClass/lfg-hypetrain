@@ -106,7 +106,7 @@ nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
 To control the train, add code like the following to your bundle's extension:
 ```javascript
 var train = nodecg.extensions['lfg-hypetrain'];
-var sublistener = nodecg.extensions['eol-sublistener'];
+var sublistener = nodecg.extensions['lfg-sublistener'];
 
 sublistener.on('subscription', function subscription(data) {
     // train.addPassenger increments the passenger count and returns the current state of the train
