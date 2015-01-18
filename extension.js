@@ -5,7 +5,6 @@ var db = require('./extension/db');
 var Q = require('q');
 var extend = require('extend');
 var fs = require('fs');
-var log = require('../../lib/logger');
 var nodecg = {};
 
 var cdTimer = null;
