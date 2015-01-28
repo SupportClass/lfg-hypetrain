@@ -63,18 +63,18 @@ nodecg.declareSyncedVar({ variableName: 'duration',
 });
 
 cooldownCtrls.find('.js-reset').click(function resetClick() {
-    nodecg.sendMessage('resetCooldown')
+    nodecg.sendMessage('resetCooldown');
 });
 cooldownCtrls.find('.js-end').click(function endClick() {
-    nodecg.sendMessage('endCooldown')
+    nodecg.sendMessage('endCooldown');
 });
 
 //dayTotal resetting
 panel.find('.reset-btn')
-    .on("mouseenter", function() {
+    .on('mouseenter', function() {
         $(this).siblings('.reset-target').css('opacity', 0);
     })
-    .on("mouseleave", function() {
+    .on('mouseleave', function() {
         $(this).siblings('.reset-target').css('opacity', 1);
     });
 

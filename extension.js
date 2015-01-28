@@ -3,8 +3,6 @@
 // Exports a train singleton
 var db = require('./extension/db');
 var Q = require('q');
-var extend = require('extend');
-var fs = require('fs');
 var nodecg = {};
 
 var cdTimer = null;
@@ -96,9 +94,8 @@ Train.prototype.init = function() {
 
 // Allows for setting any or all of the properties.
 Train.prototype.write = function(args) {
-    db.update({ _id: 'train' }, { $set: args }, { upsert: true }, function (err, numAdded) {
-        if (err)
-            log.error(err.stack);
+    db.update({ _id: 'train' }, { $set: args }, { upsert: true }, function (err) {
+        if (err) nodecg.log.error(err.stack);
     });
 };
 
@@ -168,4 +165,4 @@ function initOptions() {
         nodecg.bundleConfig.disableThresholdEditing = false;
 }
 
-module.exports = function(extensionApi) { return new Train(extensionApi) };
+module.exports = function(extensionApi) { return new Train(extensionApi); };

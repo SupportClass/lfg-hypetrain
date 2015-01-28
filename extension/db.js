@@ -1,3 +1,5 @@
+'use strict';
+
 // Makes the DB connection once and returns the same connection instance for all modules requiring this one
 var Datastore = require('nedb');
 var db = new Datastore({ filename: './db/lfg-hypetrain.db', autoload: true });
