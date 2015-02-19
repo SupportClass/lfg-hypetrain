@@ -1,7 +1,7 @@
 {
     "name": "lfg-hypetrain",
     "version": "1.0.0",
-    "nodecgDependency": "~0.4.0",
+    "nodecgDependency": "~0.5.0",
     "homepage": "http://alexvan.camp/",
     "authors": [
         "Alex Van Camp <email@alexvan.camp>"
@@ -9,10 +9,6 @@
     "description": "Provides a hype train for donations/subscriptions. Has no view page.",
     "license": "MIT",
     "extension": {
-        "express": false,
         "path": "extension.js"
-    },
-    "dependencies": {
-        "nedb": "^1.1.1"
     }
 }
