@@ -1,4 +1,5 @@
 {
+  "name": "lfg-hypetrain",
   "dependencies": {
     "nedb": "^1.1.1"
   }
