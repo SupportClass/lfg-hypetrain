@@ -15,7 +15,7 @@ modal.find('.js-apply').click(function applyClick() {
 
 
 var remainingTime = nodecg.Replicant('remainingTime');
-remainingTime.on('change', function(newVal) {
+remainingTime.on('change', function(oldVal, newVal) {
     var minutes = Math.floor(newVal / 60);
     var seconds = newVal - minutes * 60;
     if (seconds < 10)
@@ -25,32 +25,32 @@ remainingTime.on('change', function(newVal) {
 });
 
 var isCooldownActive = nodecg.Replicant('isCooldownActive');
-isCooldownActive.on('change', function(newVal) {
+isCooldownActive.on('change', function(oldVal, newVal) {
     if (newVal === false) {
         cooldownEl.text('OFF');
     }
 });
 
 var passengers = nodecg.Replicant('passengers');
-passengers.on('change', function(newVal) {
+passengers.on('change', function(oldVal, newVal) {
     trainCtrls.find('.js-passengers').val(newVal);
     panel.find('.js-passengers').text(newVal);
 });
 
 var dayTotal = nodecg.Replicant('dayTotal');
-dayTotal.on('change', function(newVal) {
+dayTotal.on('change', function(oldVal, newVal) {
     trainCtrls.find('.js-daytotal').val(newVal);
     panel.find('.js-daytotal').text(newVal);
 });
 
 var threshold = nodecg.Replicant('threshold');
-threshold.on('change', function(newVal) {
+threshold.on('change', function(oldVal, newVal) {
     trainCtrls.find('.js-threshold').val(newVal);
     panel.find('.js-threshold').text(newVal);
 });
 
 var duration = nodecg.Replicant('duration');
-duration.on('change', function(newVal) {
+duration.on('change', function(oldVal, newVal) {
     cooldownCtrls.find('.js-duration').val(newVal);
 });
 
