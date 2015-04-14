@@ -1,9 +1,10 @@
 'use strict';
 
 // Exports a train singleton
-var db = require('./extension/db');
 var Q = require('q');
 var nodecg = {};
+var elapsedTime, remainingTime, isCooldownActive; // transient variables
+var passengers, dayTotal, threshold, duration; // persistent variables
 
 var cdTimer = null;
 
@@ -13,41 +14,16 @@ function Train(extensionApi) {
 
     initOptions();
 
-    // These properties are transient and are not persisted in the DB
-    nodecg.declareSyncedVar({ variableName: 'elapsedTime', initialVal: 0 });
-    nodecg.declareSyncedVar({ variableName: 'remainingTime', initialVal: 0 });
-    nodecg.declareSyncedVar({ variableName: 'isCooldownActive', initialVal: false });
+    // These properties are transient and are not persisted
+    elapsedTime = nodecg.Replicant('elapsedTime', { defaultValue: 0, persistent: false });
+    remainingTime = nodecg.Replicant('remainingTime', { defaultValue: 0, persistent: false });
+    isCooldownActive = nodecg.Replicant('isCooldownActive', { defaultValue: false, persistent: false });
 
-    this.init()
-        .then(function(train) {
-            nodecg.declareSyncedVar({ variableName: 'passengers',
-                initialVal: train.passengers,
-                setter: function(newVal) {
-                    self.write({passengers: newVal});
-                }
-            });
-            nodecg.declareSyncedVar({ variableName: 'dayTotal',
-                initialVal: train.dayTotal,
-                setter: function(newVal) {
-                    self.write({dayTotal: newVal});
-                }
-            });
-            nodecg.declareSyncedVar({ variableName: 'threshold',
-                initialVal: train.threshold,
-                setter: function(newVal) {
-                    self.write({threshold: newVal});
-                }
-            });
-            nodecg.declareSyncedVar({ variableName: 'duration',
-                initialVal: train.duration,
-                setter: function(newVal) {
-                    self.write({duration: newVal});
-                }
-            });
-        })
-        .fail(function(err) {
-            throw err;
-        });
+    // These properties are persisted to disk
+    passengers = nodecg.Replicant('passengers', { defaultValue: 0 });
+    dayTotal = nodecg.Replicant('dayTotal', { defaultValue: 0 });
+    threshold = nodecg.Replicant('threshold', { defaultValue: 10 });
+    duration = nodecg.Replicant('duration', { defaultValue: 300 });
 
     nodecg.listenFor('startCooldown', this.startCooldown.bind(this));
     nodecg.listenFor('endCooldown', this.endCooldown.bind(this));
@@ -55,92 +31,59 @@ function Train(extensionApi) {
 
     // temporary workaround for some bundles until I figure out how to make this better
     nodecg.listenFor('getPassengers', function(data, cb) {
-        cb(nodecg.variables.passengers);
+        cb(passengers.value);
     });
     nodecg.listenFor('getDayTotal', function(data, cb) {
-        cb(nodecg.variables.dayTotal);
+        cb(dayTotal.value);
     });
 }
-
-Train.prototype.init = function() {
-    var deferred = Q.defer();
-    db.findOne({ _id: 'train' }, function (err, doc) {
-        if (err) {
-            deferred.reject(new Error(err));
-        } else if (doc === null) {
-            // If the train isn't in the DB, make a new one with defaults
-            var defaultTrain = {
-                _id: 'train',
-                passengers: 0,
-                dayTotal: 0,
-                threshold: 10,
-                duration: 300
-            };
-
-            db.insert(defaultTrain, function (err, newDoc) {
-                if (err) {
-                    deferred.reject(new Error(err));
-                } else {
-                    deferred.resolve(newDoc);
-                }
-            });
-        } else {
-            // Else, return the train already present in the DB
-            deferred.resolve(doc);
-        }
-    });
-    return deferred.promise;
-};
-
-// Allows for setting any or all of the properties.
-Train.prototype.write = function(args) {
-    db.update({ _id: 'train' }, { $set: args }, { upsert: true }, function (err) {
-        if (err) nodecg.log.error(err.stack);
-    });
-};
 
 Train.prototype.startCooldown = function () {
     _killTimer(); // Kill any existing cooldown timer
 
-    nodecg.variables.elapsedTime = 0;
-    nodecg.variables.remainingTime = nodecg.variables.duration;
-    nodecg.variables.isCooldownActive = true;
+    elapsedTime.value = 0;
+    remainingTime.value = duration.value;
+    isCooldownActive.value = true;
     cdTimer = setInterval(this.tickCooldown.bind(this), 1000);
 
     nodecg.sendMessage('cooldownStart');
 };
 
 Train.prototype.tickCooldown = function() {
-    nodecg.variables.elapsedTime++;
-    nodecg.variables.remainingTime--;
+    elapsedTime.value++;
+    remainingTime.value--;
 
-    if (nodecg.variables.remainingTime <= 0) {
-        nodecg.variables.remainingTime = 0; // force to zero if we somehow went negative
+    if (remainingTime.value <= 0) {
+        remainingTime.value = 0; // force to zero if we somehow went negative
         this.endCooldown();
     }
 };
 
 Train.prototype.resetCooldown = function() {
-    nodecg.variables.elapsedTime = 0;
-    nodecg.variables.remainingTime = nodecg.variables.duration;
+    elapsedTime.value = 0;
+    remainingTime.value = duration.value;
 };
 
 Train.prototype.endCooldown = function() {
     _killTimer();
-    nodecg.variables.passengers = 0;
-    nodecg.variables.isCooldownActive = false;
+    passengers.value = 0;
+    isCooldownActive.value = false;
     nodecg.sendMessage('cooldownEnd');
 };
 
 Train.prototype.addPassenger = function() {
-    nodecg.variables.passengers++;
-    nodecg.variables.dayTotal++;
+    passengers.value++;
+    dayTotal.value++;
 
-    var train = nodecg.variables;
-    train.isHype = train.passengers >= train.threshold;
+    var train = {
+        passengers: passengers.value,
+        dayTotal: dayTotal.value,
+        threshold: threshold.value,
+        isHype: passengers.value >= threshold.value
+    };
 
     if (train.isHype && nodecg.bundleConfig.resetAfterThreshold) {
-        nodecg.variables.passengers = 0;
+        passengers.value = 0;
         this.endCooldown();
     } else if (nodecg.bundleConfig.autoStartCooldown) {
         this.startCooldown();

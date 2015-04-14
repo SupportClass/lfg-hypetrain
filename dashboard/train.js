@@ -4,62 +4,54 @@ var modal = $('#lfg-hypetrain_modal');
 var panel = $bundle.filter('.train');
 var trainCtrls = modal.find('.js-trainCtrls');
 var cooldownCtrls = modal.find('.js-cooldownCtrls');
+var cooldownEl = panel.find('.js-cooldown');
 
 modal.find('.js-apply').click(function applyClick() {
-    nodecg.variables.passengers = parseInt(trainCtrls.find('.js-passengers').val());
-    nodecg.variables.dayTotal = parseInt(trainCtrls.find('.js-daytotal').val());
-    nodecg.variables.threshold = parseInt(trainCtrls.find('.js-threshold').val());
-    nodecg.variables.duration = parseInt(cooldownCtrls.find('.js-duration').val());
+    passengers.value = parseInt(trainCtrls.find('.js-passengers').val());
+    dayTotal.value = parseInt(trainCtrls.find('.js-daytotal').val());
+    threshold.value = parseInt(trainCtrls.find('.js-threshold').val());
+    duration.value = parseInt(cooldownCtrls.find('.js-duration').val());
 });
 
-var cooldownEl = panel.find('.js-cooldown');
-nodecg.declareSyncedVar({ variableName: 'remainingTime',
-    initialVal: 0,
-    setter: function(newVal) {
-        var minutes = Math.floor(newVal / 60);
-        var seconds = newVal - minutes * 60;
-        if (seconds < 10)
-            seconds = '0' + seconds;
 
-        cooldownEl.text(minutes + ':' + seconds);
-    }
+var remainingTime = nodecg.Replicant('remainingTime');
+remainingTime.on('change', function(newVal) {
+    var minutes = Math.floor(newVal / 60);
+    var seconds = newVal - minutes * 60;
+    if (seconds < 10)
+        seconds = '0' + seconds;
+
+    cooldownEl.text(minutes + ':' + seconds);
 });
 
-nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
-    initialVal: false,
-    setter: function(newVal) {
-        if (newVal === false) {
-            cooldownEl.text('OFF');
-        }
+var isCooldownActive = nodecg.Replicant('isCooldownActive');
+isCooldownActive.on('change', function(newVal) {
+    if (newVal === false) {
+        cooldownEl.text('OFF');
     }
 });
 
-nodecg.declareSyncedVar({ variableName: 'passengers',
-    initialVal: 0,
-    setter: function(newVal) {
-        trainCtrls.find('.js-passengers').val(newVal);
-        panel.find('.js-passengers').text(newVal);
-    }
+var passengers = nodecg.Replicant('passengers');
+passengers.on('change', function(newVal) {
+    trainCtrls.find('.js-passengers').val(newVal);
+    panel.find('.js-passengers').text(newVal);
 });
-nodecg.declareSyncedVar({ variableName: 'dayTotal',
-    initialVal: 0,
-    setter: function(newVal) {
-        trainCtrls.find('.js-daytotal').val(newVal);
-        panel.find('.js-daytotal').text(newVal);
-    }
+
+var dayTotal = nodecg.Replicant('dayTotal');
+dayTotal.on('change', function(newVal) {
+    trainCtrls.find('.js-daytotal').val(newVal);
+    panel.find('.js-daytotal').text(newVal);
 });
-nodecg.declareSyncedVar({ variableName: 'threshold',
-    initialVal: 0,
-    setter: function(newVal) {
-        trainCtrls.find('.js-threshold').val(newVal);
-        panel.find('.js-threshold').text(newVal);
-    }
+
+var threshold = nodecg.Replicant('threshold');
+threshold.on('change', function(newVal) {
+    trainCtrls.find('.js-threshold').val(newVal);
+    panel.find('.js-threshold').text(newVal);
 });
-nodecg.declareSyncedVar({ variableName: 'duration',
-    initialVal: 300,
-    setter: function(newVal) {
-        cooldownCtrls.find('.js-duration').val(newVal);
-    }
+
+var duration = nodecg.Replicant('duration');
+duration.on('change', function(newVal) {
+    cooldownCtrls.find('.js-duration').val(newVal);
 });
 
 cooldownCtrls.find('.js-reset').click(function resetClick() {
@@ -79,5 +71,5 @@ panel.find('.reset-btn')
     });
 
 $('#lfg-hypetrain_resetmodal').find('.js-reset').click(function() {
-    nodecg.variables.dayTotal = 0;
+    dayTotal.value = 0;
 });
