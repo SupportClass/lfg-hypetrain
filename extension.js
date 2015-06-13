@@ -10,7 +10,6 @@ var cdTimer = null;
 
 function Train(extensionApi) {
     nodecg = extensionApi;
-    var self = this;
 
     initOptions();
 
