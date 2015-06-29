@@ -1,7 +1,7 @@
 {
     "name": "lfg-hypetrain",
     "version": "1.0.0",
-    "nodecgDependency": "~0.5.0",
+    "nodecgDependency": "~0.6.0",
     "homepage": "http://alexvan.camp/",
     "authors": [
         "Alex Van Camp <email@alexvan.camp>"
