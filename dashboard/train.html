@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge; charset=UTF-8">
+    <meta name="viewport" content="width=device-width" initial-scale="1">
+    <title>lfg-hypetrain Panel</title>
+    <script src="/components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="stylesheet" href="components/paper-styles/paper-styles.html">
+    <link rel="import" href="components/paper-button/paper-button.html">
+    <link rel="stylesheet" href="train.css">
+</head>
+<body>
+
+<div class="train-line">
+    <div class="column">
+        <div class="train-label">Passengers</div>
+        <div class="train-value" data-field="passengers">?</div>
+    </div>
+    <div class="column">
+        <div class="train-label">Threshold</div>
+        <div class="train-value" data-field="threshold">?</div>
+    </div>
+</div>
+
+<div class="train-line">
+    <div class="column">
+        <div class="train-label">Cooldown</div>
+        <div class="train-value" data-field="cooldown">OFF</div>
+    </div>
+    <div class="column">
+        <div class="train-label">Day Total</div>
+        <div class="hidden-button" style="height: 38px;">
+            <div class="train-value reset-target" data-field="dayTotal">?</div>
+            <paper-button nodecg-dialog="reset-daytotal" class="nodecg-configure">Reset</paper-button>
+        </div>
+    </div>
+</div>
+
+<paper-button nodecg-dialog="settings" class="nodecg-configure" raised>Change Settings</paper-button>
+
+<script>
+    'use strict';
+
+    var thresholdEl = document.querySelector('div[data-field="threshold"]');
+    var cooldownEl = document.querySelector('div[data-field="cooldown"]');
+    var passengersEl = document.querySelector('div[data-field="passengers"]');
+    var dayTotalEl = document.querySelector('div[data-field="dayTotal"]');
+
+    var remainingTime = nodecg.Replicant('remainingTime');
+    remainingTime.on('change', function (oldVal, newVal) {
+        var minutes = Math.floor(newVal / 60);
+        var seconds = newVal - minutes * 60;
+        if (seconds < 10) seconds = '0' + seconds;
+
+        cooldownEl.innerText = minutes + ':' + seconds;
+    });
+
+    var isCooldownActive = nodecg.Replicant('isCooldownActive');
+    isCooldownActive.on('change', function (oldVal, newVal) {
+        if (newVal === false) {
+            cooldownEl.innerText = 'OFF';
+        }
+    });
+
+    var passengers = nodecg.Replicant('passengers');
+    passengers.on('change', function (oldVal, newVal) {
+        passengersEl.innerText = newVal;
+    });
+
+    var dayTotal = nodecg.Replicant('dayTotal');
+    dayTotal.on('change', function (oldVal, newVal) {
+        dayTotalEl.innerText = newVal;
+    });
+
+    var threshold = nodecg.Replicant('threshold');
+    threshold.on('change', function (oldVal, newVal) {
+        thresholdEl.innerText = newVal;
+    });
+</script>
+</body>
+</html>

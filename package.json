@@ -9,6 +9,29 @@
   "license": "MIT",
   "nodecg": {
     "compatibleRange": "~0.7.0",
+    "dashboardPanels": [
+      {
+        "name": "train",
+        "title": "Hype train",
+        "width": 2,
+        "file": "train.html",
+        "faIcon": "fa-bus"
+      },
+      {
+        "name": "reset-daytotal",
+        "title": "Reset Day Total",
+        "width": 3,
+        "file": "dialogs/reset_daytotal.html",
+        "dialog": true
+      },
+      {
+        "name": "settings",
+        "title": "Change Train Settings",
+        "width": 3,
+        "file": "dialogs/train_settings.html",
+        "dialog": true
+      }
+    ],
     "extension": {
       "path": "extension.js"
     }

@@ -1,0 +1,82 @@
+.column {
+    width: 50%;
+    margin: 0 4px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+
+.column:first-of-type {
+    margin-right: 4px;
+    margin-left: 0;
+}
+
+.column:last-of-type {
+    margin-right: 0;
+    margin-left: 4px;
+}
+
+paper-button {
+    display: block;
+    margin: 8px 0;
+}
+
+.train-line {
+    display: flex;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.train-label {
+    font-size: 80%;
+    text-transform: uppercase;
+}
+
+.train-value {
+    font-weight: bold;
+    font-size: 200%;
+}
+
+.hidden-button {
+    position: relative;
+}
+
+.hidden-button > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.hidden-button > paper-button {
+    margin: 4px 8px;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 350ms ease;
+    box-sizing: border-box;
+}
+
+.hidden-button > paper-button:hover {
+    opacity: 1;
+}
+
+.hidden-button > paper-button .paper-button.content {
+    padding: 0.6em 0.57em;
+}
+
+/* SUB TRAIN */
+#lfg-hypetrain_modal input {
+  text-align: right;
+}
+.lfg-hypetrain .reset-target {
+  transition: opacity 100ms linear;
+}
+.lfg-hypetrain .reset-btn {
+  position: relative;
+  top: -36px;
+  opacity: 0;
+  transition: opacity 100ms linear;
+}
+.lfg-hypetrain .reset-btn:hover {
+  opacity: 1;
+}
