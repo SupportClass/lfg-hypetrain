@@ -99,6 +99,7 @@ function _killTimer() {
 }
 
 function initOptions() {
+    nodecg.bundleConfig = nodecg.bundleConfig || {};
     if (typeof(nodecg.bundleConfig.autoStartCooldown) === 'undefined')
         nodecg.bundleConfig.autoStartCooldown = false;
     if (typeof(nodecg.bundleConfig.resetAfterThreshold) === 'undefined')
