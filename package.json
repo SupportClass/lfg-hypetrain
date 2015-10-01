@@ -2,9 +2,7 @@
   "name": "lfg-hypetrain",
   "version": "2.0.0",
   "homepage": "http://alexvan.camp/",
-  "authors": [
-    "Alex Van Camp <email@alexvan.camp>"
-  ],
+  "author": "Alex Van Camp <email@alexvan.camp>",
   "description": "Provides a hype train for donations/subscriptions. Has no view page.",
   "license": "MIT",
   "nodecg": {
