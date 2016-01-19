@@ -1,0 +1,7 @@
+{
+  "name": "lfg-hypetrain",
+  "dependencies": {
+    "paper-button": "PolymerElements/paper-button#^1.0.3",
+    "paper-input": "PolymerElements/paper-input#^1.0.12"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "lfg-hypetrain",
+  "version": "2.0.0",
+  "homepage": "http://alexvan.camp/",
+  "author": "Alex Van Camp <email@alexvan.camp>",
+  "description": "Provides a hype train for donations/subscriptions. Has no view page.",
+  "license": "MIT",
+  "nodecg": {
+    "compatibleRange": "~0.7.0",
+    "dashboardPanels": [
+      {
+        "name": "train",
+        "title": "Hype train",
+        "width": 2,
+        "headerColor": "#564573",
+        "file": "train.html",
+        "faIcon": "fa-bus"
+      },
+      {
+        "name": "reset-daytotal",
+        "title": "Reset Day Total",
+        "width": 3,
+        "file": "dialogs/reset_daytotal.html",
+        "dialog": true
+      },
+      {
+        "name": "settings",
+        "title": "Change Train Settings",
+        "width": 3,
+        "file": "dialogs/train_settings.html",
+        "dialog": true
+      }
+    ]
+  }
+}

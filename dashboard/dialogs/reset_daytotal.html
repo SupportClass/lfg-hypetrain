@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="components/webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="components/paper-button/paper-button.html">
+</head>
+<body>
+<p>Are you sure you wish to reset the <b>day total</b> to zero?</p>
+
+<p>This cannot be undone!</p>
+
+<div class="buttons">
+    <paper-button id="confirm" dialog-confirm autofocus>Yes, reset to zero</paper-button>
+    <paper-button dialog-dismiss>No, do not reset</paper-button>
+</div>
+
+<script>
+    var dayTotal = nodecg.Replicant('dayTotal');
+
+    document.getElementById('confirm').addEventListener('click', function() {
+        dayTotal.value = 0;
+    }, false);
+</script>
+</body>
+</html>
