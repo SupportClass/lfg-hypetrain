@@ -11,15 +11,10 @@
 
 <p>This cannot be undone!</p>
 
-<div class="buttons">
-    <paper-button id="confirm" dialog-confirm autofocus>Yes, reset to zero</paper-button>
-    <paper-button dialog-dismiss>No, do not reset</paper-button>
-</div>
-
 <script>
     var dayTotal = nodecg.Replicant('dayTotal');
 
-    document.getElementById('confirm').addEventListener('click', function() {
+    document.addEventListener('dialog-confirmed', function() {
         dayTotal.value = 0;
     }, false);
 </script>

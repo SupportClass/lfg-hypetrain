@@ -21,14 +21,34 @@
         "title": "Reset Day Total",
         "width": 3,
         "file": "dialogs/reset_daytotal.html",
-        "dialog": true
+        "dialog": true,
+        "dialogButtons": [
+          {
+            "name": "Yes, reset to zero",
+            "type": "confirm"
+          },
+          {
+            "name": "No, do not reset",
+            "type": "dismiss"
+          }
+        ]
       },
       {
         "name": "settings",
         "title": "Change Train Settings",
         "width": 3,
         "file": "dialogs/train_settings.html",
-        "dialog": true
+        "dialog": true,
+        "dialogButtons": [
+          {
+            "name": "Apply",
+            "type": "confirm"
+          },
+          {
+            "name": "Cancel",
+            "type": "dismiss"
+          }
+        ]
       }
     ]
   }

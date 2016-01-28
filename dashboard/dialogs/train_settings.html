@@ -28,11 +28,6 @@
     </div>
 </div>
 
-<div class="buttons">
-    <paper-button id="confirm" dialog-confirm autofocus>Apply</paper-button>
-    <paper-button dialog-dismiss>Cancel</paper-button>
-</div>
-
 <script>
     var thresholdEl = document.getElementById('threshold');
     var durationEl = document.getElementById('duration');
@@ -67,7 +62,7 @@
         nodecg.sendMessage('endCooldown');
     }, false);
 
-    document.getElementById('confirm').addEventListener('click', function() {
+    document.addEventListener('dialog-confirmed', function() {
         duration.value = durationEl.value;
         passengers.value = passengersEl.value;
         dayTotal.value = dayTotalEl.value;
