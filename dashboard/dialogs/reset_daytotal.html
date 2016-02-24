@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <script src="components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="components/paper-button/paper-button.html">
+	<meta charset="UTF-8">
+	<link rel="import" href="components/paper-button/paper-button.html">
 </head>
 <body>
-<p>Are you sure you wish to reset the <b>day total</b> to zero?</p>
+	<p>Are you sure you wish to reset the <b>day total</b> to zero?</p>
 
-<p>This cannot be undone!</p>
+	<p>This cannot be undone!</p>
 
-<script>
-    var dayTotal = nodecg.Replicant('dayTotal');
+	<script>
+		var dayTotal = nodecg.Replicant('dayTotal');
 
-    document.addEventListener('dialog-confirmed', function() {
-        dayTotal.value = 0;
-    }, false);
-</script>
+		document.addEventListener('dialog-confirmed', function () {
+			dayTotal.value = 0;
+		}, false);
+	</script>
 </body>
 </html>

@@ -1,74 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title></title>
-    <script src="components/webcomponentsjs/webcomponents-lite.min.js"></script>
-    <link rel="import" href="components/paper-button/paper-button.html">
-    <link rel="import" href="components/paper-input/paper-input.html">
-    <style>
-        paper-button {
-            display: block;
-            margin: 8px 0;
-        }
-    </style>
+	<meta charset="UTF-8">
+	<link rel="import" href="components/paper-button/paper-button.html">
+	<link rel="import" href="components/paper-input/paper-input.html">
+	<style is="custom-style">
+		paper-button {
+			display: block;
+			margin: 8px 0;
+		}
+	</style>
 </head>
 <body>
 
-<div style="display: flex;">
-    <div style="margin-right: 5px;">
-        <paper-input id="duration" label="Duration" type="number"></paper-input>
-        <paper-button id="reset" class="nodecg-info">Reset Cooldown</paper-button>
-        <paper-button id="end" class="nodecg-danger">End Cooldown</paper-button>
-    </div>
-    <div style="margin-left: 5px;">
-        <paper-input id="passengers" label="Passengers" type="number"></paper-input>
-        <paper-input id="threshold" label="Threshold" type="number"></paper-input>
-        <paper-input id="dayTotal" label="Day Total" type="number"></paper-input>
-    </div>
-</div>
+	<div style="display: flex;">
+		<div style="margin-right: 5px;">
+			<paper-input id="duration" label="Duration" type="number"></paper-input>
+			<paper-button id="reset" class="nodecg-info">Reset Cooldown</paper-button>
+			<paper-button id="end" class="nodecg-danger">End Cooldown</paper-button>
+		</div>
+		<div style="margin-left: 5px;">
+			<paper-input id="passengers" label="Passengers" type="number"></paper-input>
+			<paper-input id="threshold" label="Threshold" type="number"></paper-input>
+			<paper-input id="dayTotal" label="Day Total" type="number"></paper-input>
+		</div>
+	</div>
 
-<script>
-    var thresholdEl = document.getElementById('threshold');
-    var durationEl = document.getElementById('duration');
-    var passengersEl = document.getElementById('passengers');
-    var dayTotalEl = document.getElementById('dayTotal');
+	<script>
+		var thresholdEl = document.getElementById('threshold');
+		var durationEl = document.getElementById('duration');
+		var passengersEl = document.getElementById('passengers');
+		var dayTotalEl = document.getElementById('dayTotal');
 
-    var duration = nodecg.Replicant('duration');
-    duration.on('change', function (oldVal, newVal) {
-        durationEl.value = newVal;
-    });
+		var duration = nodecg.Replicant('duration');
+		duration.on('change', function (oldVal, newVal) {
+			durationEl.value = newVal;
+		});
 
-    var passengers = nodecg.Replicant('passengers');
-    passengers.on('change', function (oldVal, newVal) {
-        passengersEl.value = newVal;
-    });
+		var passengers = nodecg.Replicant('passengers');
+		passengers.on('change', function (oldVal, newVal) {
+			passengersEl.value = newVal;
+		});
 
-    var dayTotal = nodecg.Replicant('dayTotal');
-    dayTotal.on('change', function (oldVal, newVal) {
-        dayTotalEl.value = newVal;
-    });
+		var dayTotal = nodecg.Replicant('dayTotal');
+		dayTotal.on('change', function (oldVal, newVal) {
+			dayTotalEl.value = newVal;
+		});
 
-    var threshold = nodecg.Replicant('threshold');
-    threshold.on('change', function (oldVal, newVal) {
-        thresholdEl.value = newVal;
-    });
+		var threshold = nodecg.Replicant('threshold');
+		threshold.on('change', function (oldVal, newVal) {
+			thresholdEl.value = newVal;
+		});
 
-    document.getElementById('reset').addEventListener('click', function() {
-        nodecg.sendMessage('resetCooldown');
-    }, false);
+		document.getElementById('reset').addEventListener('click', function () {
+			nodecg.sendMessage('resetCooldown');
+		}, false);
 
-    document.getElementById('end').addEventListener('click', function() {
-        nodecg.sendMessage('endCooldown');
-    }, false);
+		document.getElementById('end').addEventListener('click', function () {
+			nodecg.sendMessage('endCooldown');
+		}, false);
 
-    document.addEventListener('dialog-confirmed', function() {
-        duration.value = durationEl.value;
-        passengers.value = passengersEl.value;
-        dayTotal.value = dayTotalEl.value;
-        threshold.value = thresholdEl.value;
-    }, false);
-</script>
+		document.addEventListener('dialog-confirmed', function () {
+			duration.value = durationEl.value;
+			passengers.value = passengersEl.value;
+			dayTotal.value = dayTotalEl.value;
+			threshold.value = thresholdEl.value;
+		}, false);
+	</script>
 
 </body>
 </html>
