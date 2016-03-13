@@ -108,7 +108,9 @@
 		remainingTime.on('change', function (oldVal, newVal) {
 			var minutes = Math.floor(newVal / 60);
 			var seconds = newVal - minutes * 60;
-			if (seconds < 10) seconds = '0' + seconds;
+			if (seconds < 10) {
+				seconds = '0' + seconds;
+			}
 
 			cooldownEl.innerText = minutes + ':' + seconds;
 		});
