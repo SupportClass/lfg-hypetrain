@@ -1,6 +1,6 @@
 {
   "name": "lfg-hypetrain",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "homepage": "http://alexvan.camp/",
   "author": "Alex Van Camp <email@alexvan.camp>",
   "description": "Provides a hype train for donations/subscriptions. Has no view page.",
