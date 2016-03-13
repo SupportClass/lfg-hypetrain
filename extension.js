@@ -55,6 +55,10 @@ Train.prototype.startCooldown = function () {
 Train.prototype.tickCooldown = function () {
 	elapsedTime.value++;
 	remainingTime.value--;
+	nodecg.sendMessage('cooldownTick', {
+		remainingTime: remainingTime.value,
+		elapsedTime: elapsedTime.value
+	});
 
 	if (remainingTime.value <= 0) {
 		remainingTime.value = 0; // force to zero if we somehow went negative
