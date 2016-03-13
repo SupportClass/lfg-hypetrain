@@ -41,85 +41,51 @@ nodecg.sendMessageToBundle('resetCooldown', 'lfg-hypetrain');
 ```
 ... where `callback` is the name of a function with the signature `function callbackName(data)`
 
-### Synced variables
-lfg-hypetrain makes extensive use of synced variables, all of which your bundle can access, either to listen to
-or modify directly.
+### Replicants
+lfg-hypetrain makes extensive use of [Replicants](http://nodecg.com/NodeCG.html#Replicant), all of which your bundle can access, either to listen to or modify directly.
 ```javascript
 // The number of 'passengers' on the train
-nodecg.declareSyncedVar({ variableName: 'passengers',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('passengers', 'lfg-hypetrain');
 
 // How many passengers there have been today
-nodecg.declareSyncedVar({ variableName: 'dayTotal',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('dayTotal', 'lfg-hypetrain');
 
 // Number of passengers needed to engage 'hype' status
-nodecg.declareSyncedVar({ variableName: 'threshold',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('threshold', 'lfg-hypetrain');
 
 // Duration of the cooldown
-nodecg.declareSyncedVar({ variableName: 'duration',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('duration', 'lfg-hypetrain');
 
 // How much time has elapsed in the cooldown
-nodecg.declareSyncedVar({ variableName: 'elapsedTime',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('elapsedTime', 'lfg-hypetrain');
 
 // How much time is left in the cooldown
-nodecg.declareSyncedVar({ variableName: 'remainingTime',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('remainingTime', 'lfg-hypetrain');
 
 // Is the countdown currently active and ticking
-nodecg.declareSyncedVar({ variableName: 'isCooldownActive',
-    bundleName: 'lfg-hypetrain',
-    setter: function(newVal) {
-        // do work
-    }
-});
+nodecg.Replicant('isCooldownActive', 'lfg-hypetrain');
 ```
 
 ### Use in other bundles' extensions
-To control the train, add code like the following to your bundle's extension:
+To control the train, add `lfg-hypetrain` to your bundle's [`bundleDependencies`](http://nodecg.com/tutorial-manifest.html). Then, add code like the following to your bundle's extension:
 ```javascript
-var train = nodecg.extensions['lfg-hypetrain'];
-var sublistener = nodecg.extensions['lfg-sublistener'];
-
-sublistener.on('subscription', function onSubscription(subscription) {
-    // train.addPassenger increments the passenger count and returns the current state of the train
-    subscription.train = train.addPassenger();
-    nodecg.sendMessage('subscription', subscription);
-
-    // You can also control the cooldown directly
-    // train.startCooldown();
-    // train.resetCooldown();
-    // train.endCooldown();
-
-    // All events/synced variables listed above can be used here
-});
+module.exports = function (nodecg) {
+    var train = nodecg.extensions['lfg-hypetrain'];
+    var sublistener = nodecg.extensions['lfg-sublistener'];
+    
+    sublistener.on('subscription', function onSubscription(subscription) {
+        // train.addPassenger increments the passenger count and returns the current state of the train
+        subscription.train = train.addPassenger();
+        nodecg.sendMessage('subscription', subscription);
+    
+        // You can also control the cooldown directly
+        // train.startCooldown();
+        // train.resetCooldown();
+        // train.endCooldown();
+    
+        // All events/synced variables listed above can be used here
+    });
+}
 ```
 
 ### License
