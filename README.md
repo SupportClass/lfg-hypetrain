@@ -1,4 +1,4 @@
-#lfg-hypetrain [![Build Status](https://travis-ci.org/SupportClass/lfg-hypetrain.svg?branch=master)](https://travis-ci.org/SupportClass/lfg-hypetrain)
+# lfg-hypetrain [![Build Status](https://travis-ci.org/SupportClass/lfg-hypetrain.svg?branch=master)](https://travis-ci.org/SupportClass/lfg-hypetrain)  
 This is a [NodeCG](http://github.com/nodecg/nodecg) bundle.
 
 This bundle manages the so-called "hype train" for subscriptions and/or donations.
