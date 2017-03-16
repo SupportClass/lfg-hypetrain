@@ -1,6 +1,5 @@
 {
-	"root": true,
-	"extends": "xo/browser",
+	"extends": "xo/esnext",
 	"globals": {
 		"nodecg": true
 	},
@@ -14,8 +13,5 @@
 				]
 			}
 		]
-	},
-	"plugins": [
-		"html"
-	]
+	}
 }

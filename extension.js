@@ -1,21 +1,18 @@
-/* eslint-env node */
 'use strict';
 
-var nodecg;
-var elapsedTime;
-var remainingTime;
-var isCooldownActive;
-var passengers;
-var dayTotal;
-var threshold;
-var duration;
+let nodecg;
+let elapsedTime;
+let remainingTime;
+let isCooldownActive;
+let passengers;
+let dayTotal;
+let threshold;
+let duration;
 
-var cdTimer = null;
+let cdTimer = null;
 
 function Train(extensionApi) {
 	nodecg = extensionApi;
-
-	initOptions();
 
 	// These properties are transient and are not persisted
 	elapsedTime = nodecg.Replicant('elapsedTime', {defaultValue: 0, persistent: false});
@@ -33,10 +30,11 @@ function Train(extensionApi) {
 	nodecg.listenFor('resetCooldown', this.resetCooldown.bind(this));
 
 	// temporary workaround for some bundles until I figure out how to make this better
-	nodecg.listenFor('getPassengers', function (data, cb) {
+	nodecg.listenFor('getPassengers', (data, cb) => {
 		cb(passengers.value);
 	});
-	nodecg.listenFor('getDayTotal', function (data, cb) {
+
+	nodecg.listenFor('getDayTotal', (data, cb) => {
 		cb(dayTotal.value);
 	});
 }
@@ -82,7 +80,7 @@ Train.prototype.addPassenger = function () {
 	passengers.value++;
 	dayTotal.value++;
 
-	var train = {
+	const train = {
 		passengers: passengers.value,
 		dayTotal: dayTotal.value,
 		threshold: threshold.value,
@@ -103,21 +101,6 @@ function _killTimer() {
 	if (cdTimer !== null) {
 		clearInterval(cdTimer);
 		cdTimer = null;
-	}
-}
-
-function initOptions() {
-	nodecg.bundleConfig = nodecg.bundleConfig || {};
-	if (nodecg.bundleConfig.autoStartCooldown === undefined) {
-		nodecg.bundleConfig.autoStartCooldown = false;
-	}
-
-	if (nodecg.bundleConfig.resetAfterThreshold === undefined) {
-		nodecg.bundleConfig.resetAfterThreshold = false;
-	}
-
-	if (nodecg.bundleConfig.disableThresholdEditing === undefined) {
-		nodecg.bundleConfig.disableThresholdEditing = false;
 	}
 }
 

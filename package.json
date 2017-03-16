@@ -11,10 +11,10 @@
   "license": "MIT",
   "scripts": {
     "test": "npm run static",
-    "static": "eslint dashboard/**/*.js dashboard/**/*.html extension.js"
+    "static": "eslint ."
   },
   "nodecg": {
-    "compatibleRange": "~0.7.0",
+    "compatibleRange": "~0.8.0",
     "dashboardPanels": [
       {
         "name": "train",
@@ -61,8 +61,8 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^2.3.0",
-    "eslint-config-xo": "^0.12.0",
-    "eslint-plugin-html": "^1.4.0"
+    "eslint": "^3.17.1",
+    "eslint-config-xo": "^0.17.0",
+    "eslint-plugin-html": "^2.0.1"
   }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<link rel="import" href="components/paper-button/paper-button.html">
+	<link rel="import" href="../components/paper-button/paper-button.html">
 </head>
 <body>
 	<p>Are you sure you wish to reset the <b>day total</b> to zero?</p>
@@ -10,9 +10,9 @@
 	<p>This cannot be undone!</p>
 
 	<script>
-		var dayTotal = nodecg.Replicant('dayTotal');
+		const dayTotal = nodecg.Replicant('dayTotal');
 
-		document.addEventListener('dialog-confirmed', function () {
+		document.addEventListener('dialog-confirmed', () => {
 			dayTotal.value = 0;
 		}, false);
 	</script>
