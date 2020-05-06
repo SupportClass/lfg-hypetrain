@@ -1,6 +1,6 @@
 {
   "name": "lfg-hypetrain",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "homepage": "http://alexvan.camp/",
   "author": "Alex Van Camp <email@alexvan.camp>",
   "description": "Provides a hype train for donations/subscriptions. Has no view page.",
@@ -14,7 +14,7 @@
     "static": "eslint ."
   },
   "nodecg": {
-    "compatibleRange": "~0.8.0",
+    "compatibleRange": "^1.0.0",
     "dashboardPanels": [
       {
         "name": "train",
